@@ -66,11 +66,22 @@ fi
 step "Programs (SETUP.md step 1)"
 
 if ! command -v brew >/dev/null 2>&1; then
-  say "error: Homebrew is not installed, and it is how SETUP.md installs these."
+  say "note: Homebrew is not installed, and it is how SETUP.md installs these."
   say "  Install it from https://brew.sh, or install whisper-cpp and ffmpeg by"
-  say "  whatever means your platform prefers, then re-run. Both are packaged"
-  say "  for most Linux distributions under the same names."
-  exit 1
+  say "  whatever means your platform prefers. Both are packaged for most Linux"
+  say "  distributions under the same names."
+  # A dry run must STILL print its commands here, and this is the case where
+  # that matters most: someone on a platform this script cannot install for is
+  # exactly who needs to read the commands and run their own equivalent. Exiting
+  # would break rule 2 of the contract in tools/README.md on the one platform
+  # where the manual path is not merely an option but the only route.
+  if [ "$DRY_RUN" -eq 0 ]; then
+    say ""
+    say "  Nothing installed. Re-run with --dry-run to see the commands anyway."
+    exit 1
+  fi
+  say ""
+  say "  Continuing the dry run so you can read the commands regardless:"
 fi
 
 BREW_WANTED=()
