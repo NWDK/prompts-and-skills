@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:04,200
+Okay, so this is the checkout page as it stands on staging.
+
+2
+00:00:04,200 --> 00:00:08,100
+Header looks right, that matches the design, leave that one alone.
+
+3
+00:00:08,100 --> 00:00:12,400
+Right, so if I try to submit without a postcode, that's wrong.
+
+4
+00:00:12,400 --> 00:00:14,000
+The error's over on the right, it should sit under the field.
+
+5
+00:00:14,000 --> 00:00:17,600
+And now it takes you straight through to confirmation.
+
+6
+00:00:17,600 --> 00:00:21,000
+Which is a variance, we had a review step in between.
+
+7
+00:00:21,000 --> 00:00:24,000
+I don't love how much green there is here, but that's a separate conversation.

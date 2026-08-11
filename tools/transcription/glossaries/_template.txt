@@ -1,0 +1,31 @@
+# Glossary template — copy this to <your-project>.txt and fill it in.
+#
+#   cp _template.txt my-project.txt
+#   tools/transcription/transcribe.sh recording.mov my-project
+#
+# WHY THIS EXISTS
+# Whisper mis-hears names it has never encountered. Left alone it will turn a
+# product name into the nearest ordinary English words — two real misses from a
+# product walkthrough: "Smooth Matte" became "smooth Mac", "dual price" became
+# "jewel price". Listing the right spellings here primes it before it guesses.
+#
+# TWO RULES
+# 1. Only add spellings you are SURE of. A wrong spelling here actively biases
+#    the transcript toward the wrong spelling, which is worse than no glossary.
+# 2. Whisper weights roughly the LAST 200 WORDS of the primer most heavily, and
+#    _global.txt is prepended to this file. So put the terms most likely to be
+#    spoken at the BOTTOM, and keep the whole thing tight.
+#
+# Lines starting with # are ignored. One term or short phrase per line.
+# Harvest as you go: any name you have to correct by hand belongs here after.
+
+# --- People (names spoken on calls or in narration) ---
+
+
+# --- Companies, vendors, tools ---
+
+
+# --- Product names, exactly as they appear on screen ---
+
+
+# --- Domain words that sound like something else ---

@@ -1,0 +1,66 @@
+name: tests
+
+# Runs the regression suite on both platforms the docs claim support for.
+# Nothing here publishes, deploys, or touches anything outside the checkout.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # The suite generates its own video fixtures, so ffmpeg is a real
+      # dependency of the tests rather than only of the tool.
+      #
+      # Yes, this uses sudo, and tools/README.md rule 6 says our install script
+      # never may. Both are right: that rule is about a script asking for YOUR
+      # password on YOUR machine. This is a throwaway VM where apt has no other
+      # way in, and the difference is the whole point of the rule.
+      - name: Install ffmpeg (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install ffmpeg (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg
+
+      - name: Install Pillow
+        run: python3 -m pip install Pillow
+
+      - name: Show versions
+        run: |
+          python3 --version
+          ffmpeg -version | head -1
+          ffprobe -version | head -1
+
+      # ResourceWarnings are errors here: a leaked file handle in a suite that
+      # asserts files are untouched is exactly the kind of noise that hides a
+      # real finding.
+      - name: Run the regression suite
+        run: python3 -W error::ResourceWarning tools/video-frames/test_extract.py
+
+      # The install script is the thing a reader is most entitled to distrust,
+      # so prove on every commit that its dry run stays a dry run.
+      - name: Install script dry-run makes no changes
+        run: |
+          bash tools/transcription/setup.sh --dry-run
+          test -z "$(git status --porcelain)" || {
+            echo "setup.sh --dry-run modified the working tree"; git status --porcelain; exit 1; }
