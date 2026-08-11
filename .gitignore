@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Model weights and other large binaries are never committed — they are
+# downloaded by a command you can read. A multi-gigabyte file in version
+# control makes every clone slow forever.
+*.bin
+*.gguf
+*.pt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
