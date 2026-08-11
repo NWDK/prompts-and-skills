@@ -522,6 +522,31 @@ class Shell(unittest.TestCase):
         self.assertIn("Nothing will be executed", r.stdout)
         after = sorted(os.listdir(models)) if os.path.isdir(models) else None
         self.assertEqual(before, after, "--dry-run touched the model directory")
+        # The contract is that you can READ the commands and run them yourself,
+        # so printing them is the thing being promised -- not the exit code.
+        # Checking only the status let a Linux run pass review while the script
+        # bailed before printing anything.
+        self.assertIn("curl", r.stdout, "--dry-run did not print the download command")
+
+    def test_dry_run_still_prints_commands_without_homebrew(self):
+        # The case that matters most and the one that broke: on a platform this
+        # script cannot install for, the manual path is not an option, it is the
+        # only route -- so the dry run has to work there above all.
+        p = os.path.join(TOOLS, "transcription", "setup.sh")
+        if not os.path.exists(p):
+            self.skipTest("setup.sh not present")
+        # Drop Homebrew from PATH rather than building one from scratch: a Linux
+        # box has coreutils and no brew, which is the situation being simulated.
+        # A hand-built PATH omitted `dirname` and failed for a reason that had
+        # nothing to do with the thing under test.
+        path = os.pathsep.join(d for d in os.environ.get("PATH", "").split(os.pathsep)
+                               if d and "brew" not in d and "/opt/homebrew" not in d)
+        env = {**os.environ, "PATH": path}
+        self.assertIsNone(shutil.which("brew", path=path), "brew is still reachable")
+        r = subprocess.run(["bash", p, "--dry-run"], capture_output=True, text=True, env=env)
+        self.assertEqual(r.returncode, 0,
+                         f"--dry-run failed with no Homebrew present:\n{r.stdout}\n{r.stderr}")
+        self.assertIn("curl", r.stdout, "--dry-run printed no commands without Homebrew")
 
     def test_setup_never_uses_elevated_privileges(self):
         # Rule 6 of the install-script contract in tools/README.md.
