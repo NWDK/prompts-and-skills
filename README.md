@@ -8,11 +8,19 @@ Each skill is a playbook that tells Claude how to approach a kind of work — wh
 
 Reasonable questions to ask of any repo like this, answered up front so you do not have to dig.
 
-**Does anything here phone home?** No. No skill or tool in this repo sends data anywhere. Where a skill processes something sensitive — a recording, a transcript, a meeting — that processing is local by design, and the reasoning is written down in that skill's `DECISIONS.md`. `grep -rnoE 'https?://' tools/` returns documentation links and package sources, nothing else.
+**Does anything here phone home?** No telemetry, anywhere, and **nothing that processes your data has a network path.** Run `grep -rnoE 'https?://' tools/` rather than taking our word for it: every hit is a documentation link or a package source.
 
-**Does anything run automatically?** No. Nothing here registers a hook, a `SessionStart` handler, or anything that loads without being invoked. A skill is inert until someone types its name.
+Two of those hits are real downloads and it would be sloppy not to say so — `setup.sh` fetches ffmpeg, whisper.cpp and a model file, once, at install time. That is the opposite of phoning home (you can see the URLs, run the commands yourself, and skip the script entirely), but "nothing here touches the network" would be a false sentence and this repo tries not to write those.
+
+Worth separating two things that are easy to conflate, though. **The tools** genuinely send nothing anywhere; where a skill preprocesses something sensitive — a recording, a transcript — that preprocessing is local by design and the reasoning is in that skill's `DECISIONS.md`. **A skill is a set of instructions for your agent**, and whatever your agent reads goes wherever your agent already sends things. So a skill that asks the model to look at a frame means that frame reaches your model provider. Skills that handle sensitive material say exactly what leaves the machine and what does not — see [video-review's boundary section](skills/video-review/README.md#what-actually-leaves-your-machine) for the shape of it. "Local preprocessing" is not the same claim as "nothing leaves your machine", and this repo tries never to blur them.
+
+**Does anything run automatically?** Nothing here registers a hook, a `SessionStart` handler, or anything that executes on its own — no code in this repo runs until you run it.
+
+Be precise about the other half, though, because "inert until you type its name" would be wrong: most agent hosts can select a skill *implicitly* from its description when a task looks like a match. So a skill you have installed may be loaded into context without you naming it. What it can never do is act on its own — the tools here are commands your agent chooses to run, and a skill is instructions, not a background process.
 
 **Do the claims match the code?** That is the right question and the whole reason the `DECISIONS.md` files exist. They record what was tried, what was measured, and what was rejected — including the cases where the obvious approach turned out to be wrong. If a claim in a `SKILL.md` is not supported by the code beside it, that is a bug and worth raising as an issue.
+
+Where a tool has documented guarantees, those guarantees are also tests: `python3 tools/video-frames/test_extract.py` runs in about ten seconds on standard library alone, and CI runs it on Linux and macOS on every push. Several of those tests exist because the obvious approach was measurably wrong the first time.
 
 **What are the known limitations?** Each skill's README has a "Known limits" section near the top rather than buried at the bottom. If a limitation is missing there, it was an oversight rather than a decision.
 
@@ -61,12 +69,14 @@ Large files — model weights in particular — are **never committed here**. Th
 |---|---|---|
 | [prompt-writer](skills/prompt-writer/) | Design or refine prompts without executing the underlying task | No |
 | [meeting-notes](skills/meeting-notes/) | Turn an AI meeting transcript into filed action items, decisions, and a punch list — proposes routing before filing | No |
+| [video-review](skills/video-review/) | Turn a local screen recording into a cited written document — defect log, runbook, or footage notes — where every claim traces to a timestamp and a frame. **[Worked example](skills/video-review/example/report.md)** | Yes — [transcription](tools/transcription/) and [video-frames](tools/video-frames/) |
 
 ## Tools
 
 | Tool | What it is | Depends on |
 |---|---|---|
-| *(none yet — see [tools/README.md](tools/README.md) for the convention)* | | |
+| [transcription](tools/transcription/) | Local audio-to-text with glossary priming, so product names spell correctly. No network path. | whisper.cpp, ffmpeg, a model file you download once |
+| [video-frames](tools/video-frames/) | Decides which frames of a video are worth paying for, and extracts them labelled with what was being said | ffmpeg, ffprobe, Pillow |
 
 ## Licence
 

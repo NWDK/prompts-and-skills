@@ -13,3 +13,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Worked-example artefacts — regenerate with skills/video-review/example/make-example.sh
+skills/video-review/example/*.mp4
+skills/video-review/example/*-frames/
