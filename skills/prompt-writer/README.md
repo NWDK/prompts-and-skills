@@ -4,6 +4,16 @@ Turns messy natural-language requests into structured, copy-pasteable prompts fo
 
 This is a **prompt-design skill** — it designs prompts, it does not execute the underlying task.
 
+## Known limits
+
+Read these before deciding whether this fits, not after.
+
+- **It will not do the task, and that catches people out.** Paste a question while this skill is active and you get a better-worded question back, not an answer. That is the core rule working, not a bug — but if you wanted the answer, say so and drop the skill.
+- **Nothing it writes is tested.** There is no eval loop, and by its own core rule the skill cannot run a prompt to find out whether it works. "Good" here means well-structured, not measured. Budget a round of real use before trusting a prompt with anything that matters.
+- **It stops at the prompt boundary.** For agentic prompts it will tell you when the real problem is the context the model can see rather than the wording — and then stop. Flagging that is in scope; designing the system around it is explicitly not.
+- **It is Claude-shaped by default.** The XML-tag pattern is recommended because Claude is trained on it. Prompts aimed at other models come out in the same shape, which is usually harmless but is not tuned for them.
+- **It names no model versions, which means it cannot tell you what yours does.** The reasoning guidance is deliberately written to outlast individual releases, so it stops short of specifics: whether your model exposes an effort setting, what its levels are called, and whether thinking is on by default are all things you have to check against current documentation. The trade is intentional — a version list in a skill file goes stale within weeks — but the last step is yours.
+
 ## What it handles
 
 - Writing a prompt from scratch from a vague or short ask
