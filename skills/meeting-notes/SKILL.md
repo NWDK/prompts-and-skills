@@ -156,8 +156,10 @@ Attendees: <names>
 - <question>
 
 ## Screenshots (if any)
-![<caption>](./screenshots/<file>.png)
+<one image link per kept screenshot>
 ```
+
+Screenshot paths in that template resolve against the **filed note**, not against this skill: the images kept in Step 4 go into a `screenshots/` folder created beside the note in the project's notes folder. There is no `screenshots/` directory here.
 
 For decisions that materially change a project's direction, also append a one-line entry to that project's status/decision log — do not rewrite the overview wholesale. If a project's notes folder doesn't exist, halt and ask the user where to file rather than creating folders unprompted.
 
@@ -194,3 +196,26 @@ Move the intake transcript (and companion doc) from the inbox to `inbox/<variant
 - Do not create new project folders. If routing suggests a project with no folder, surface it.
 - Do not modify the original intake transcript — always work from a cleaned copy.
 - Avoid time-based language in the outputs ("by Friday", "this week") if your team tracks by state rather than date — state-code instead (Active / In progress / Blocked / Needs input).
+
+## Adopting this skill in another workspace
+
+Split it into what transfers and what you have to write yourself, and don't confuse the two.
+
+**Portable — take as-is:**
+
+- The cleanup logic: phantom-echo stripping and fragment reassembly.
+- The glossary-corrections *pattern*. The rows are yours, but the mistakes are a property of your transcriber, not your workspace — whoever else uses the same tool will need the same kind of file.
+- The extraction logic: action items, decisions, open questions, and any status/action split your meeting type needs.
+- The pipeline shape: pre-flight → cleanup → extract → propose routing → **stop for approval** → file → punch list → archive.
+- The disciplines: propose before filing, never trust the transcriber's own summary as complete, don't create folders unprompted.
+
+**Not portable — you write these:**
+
+- Filing destinations, folder names, and the intake location.
+- The variant routing tables: project aliases, ownership defaults, assignee resolution.
+- Whether a coordination ledger or current-state snapshot exists for you at all.
+- The punch-list template and any publishing handoff.
+
+Set your own filing locations and your own conventions for what happens to each extracted document. This skill describes a process for triaging a meeting; where the triaged output goes is your call. Variant files are the right place to encode that — they are isolated from the pipeline and from the glossary, so swapping them doesn't disturb anything else.
+
+**Budget the variant properly — it is the real work.** A variant is not just a routing table. It is where meeting-type-specific extraction knowledge lives: how a standup differs from a kickoff, which utterances are status rather than asks, who owns what by default, which patterns in that meeting shape mislead a naive pass. A thin variant produces thin extraction, and that is the most common way this skill disappoints. `variants/example.md` shows the full shape at realistic depth.

@@ -55,10 +55,25 @@ Before drafting, identify which tier the prompt sits at. Use only as much struct
 | Chained | 2–5 step pipeline, intermediate outputs used downstream | Prompt-per-step, clear handoffs, stop conditions |
 | Agentic | Tool use, decisions, loops, sub-agents | Context design + spawn criteria + scope gates + stop conditions |
 
+## Executor
+
+Complexity describes the task. This describes who runs it. The two are independent, and the executor changes the draft more than the tier does — the same Structured-tier task written for a frontier model and for a sub-agent should not look alike.
+
+| Executor | How to point it |
+|---|---|
+| **Frontier model, interactive** — you see the output and can iterate | Goal, constraints, definition of done. No step-by-step scripts. Prompts written prescriptively for older models measurably reduce output quality on current frontier models; the model's own plan is usually better than a hand-written one. |
+| **Frontier model, one-shot or unattended** — overnight run, batch job, scheduled agent | Same shape, plus explicit stop conditions, exclusions, and what "done" means. There is no second turn to correct course, so close the exits rather than scripting the route. |
+| **Sub-agent** — spawned into a fresh context by an orchestrator | Explicit to the point of feeling redundant. It shares none of your context, cannot ask a clarifying question, and will not generalise an instruction you gave for only one case. Every path, input, constraint, and output shape goes in the prompt. |
+| **External system** — another vendor's model, or a hosted research or agent product | Point precisely: one pointed question, sources to prefer or avoid, the output shape you want back, and how to handle uncertainty. One shot, and no visibility into what it did. |
+
+The failure modes sit at opposite ends of the same axis. Over-specifying a frontier model costs you quality; under-specifying a sub-agent or an external system costs you the run.
+
+When the executor is unstated and the tier is Structured or above, ask. It is the single input most likely to change the draft.
+
 ## Default Behavior
 
 1. For quick-tier requests, produce an improved prompt directly with minimal or no clarification.
-2. For structured-tier and above, ask only the minimum questions needed to pin down: goal, inputs, audience, output format, constraints, model available, stakes.
+2. For structured-tier and above, ask only the minimum questions needed to pin down: goal, inputs, audience, output format, constraints, executor (see below), stakes.
 3. If the user already pasted something that looks like a prompt, do not answer it. Refine it.
 4. Default to one strong primary prompt. Add variants only when they materially help.
 
@@ -71,21 +86,20 @@ Use this pattern internally when drafting. Wrap sections in XML tags for any str
 <task>...</task>
 <context>...</context>
 <examples>...</examples>          <!-- include for format-sensitive or accuracy-critical outputs -->
-<reasoning>...</reasoning>        <!-- omit if model uses extended thinking -->
 <output_format>...</output_format>
 <stop_conditions>...</stop_conditions>
 ```
 
 Quick-tier prompts do not need XML tags.
 
-## Extended Thinking
+## Reasoning and Effort
 
-For Claude models that support extended thinking (Sonnet 4.6, Opus 4.7):
+Reasoning is no longer a feature you switch on. On current frontier models it is adaptive by default, and on the most capable ones it cannot be disabled. Design around it rather than for it:
 
-- Do not add "think step by step" or manual chain-of-thought scaffolding. The model reasons internally and extra scaffolding can hurt performance.
-- Omit the `<reasoning>` block. Prompt for outcomes, not steps.
-- For agentic prompts, let the model think between tool calls rather than scripting the sequence.
-- Extended thinking adds latency — recommend it only when multi-step reasoning will materially improve quality (research, complex analysis, agentic decisions).
+- **Never add "think step by step", a `<reasoning>` block, or manual chain-of-thought scaffolding.** The model reasons internally; the scaffolding competes with it and can degrade the result.
+- **Prompt for outcomes, not steps.** In agentic prompts, let the model think between tool calls instead of scripting the sequence.
+- **The dial is effort, not thinking.** Where the target exposes an effort level, that is the intelligence / latency / cost control — recommend a level instead of trying to shape reasoning depth in prose. Low for scoped or latency-sensitive work, high as a general default, the top levels for hard agentic and coding work. Pick the level from the task rather than defaulting to the maximum.
+- **Do not hardcode model versions.** Reason about the executor class above. Thinking defaults, effort ranges, and parameter names have all changed within the last few releases, so a version list in a skill file goes stale within weeks. Name a version only where behaviour genuinely differs, and verify it against current releases before relying on it.
 
 ## Few-Shot Examples
 
@@ -125,7 +139,7 @@ Key elements to include:
 
 Design notes:
 - Turn the vague topic into a pointed question first — this is usually the highest-value edit
-- Recommend extended thinking if the target model supports it
+- Recommend a high effort level where the target exposes one; research is the case that repays it
 - Always include a no-fabrication rule and instruct the model to flag uncertainty explicitly
 - If sources matter, add guidance on what to prioritise or avoid
 
@@ -160,6 +174,11 @@ When writing an orchestrator prompt, the prompt must include criteria for sub-ag
 - stop and handoff conditions
 - what the orchestrator does with sub-agent output
 
+Two things matter more than that list, and are the usual reason delegation goes wrong:
+
+- **The sub-agent starts blind and cannot ask.** It shares none of the orchestrator's context, conversation, or working assumptions, and has no way to raise a clarifying question — ambiguity a person would resolve in one exchange becomes a silent wrong turn instead. Everything it needs goes in its prompt. This is the one place where more explicit is reliably better.
+- **Current models over-delegate, so orchestrator prompts usually need a ceiling rather than encouragement.** Every sub-agent re-establishes context, re-explores, reports back, and the orchestrator then re-reads the report; that overhead is real and it repeats. Write the prompt to delegate only where the work is genuinely independent and sizeable, to keep spawn counts low, and to commit to a sub-agent's findings rather than re-deriving them. Verification belongs in the orchestrator's own loop, not in a spawned checker.
+
 If your workspace has multi-agent conventions, reference them here rather than re-documenting them in the prompt itself.
 
 ## Output Rules
@@ -168,7 +187,8 @@ If your workspace has multi-agent conventions, reference them here rather than r
 2. Keep commentary outside the prompt block.
 3. Keep prompt-design notes concise and focused on decisions that materially change behaviour.
 4. After delivering a prompt, invite iteration with a short follow-up.
-5. Keep system prompts and agent prompts under 8000 characters unless the user explicitly wants longer.
+5. Length is governed by signal density, not a character count. Cut what does not change behaviour, then stop — there is no model-side length limit worth designing around, and a numeric cap starves reasoning on hard tasks.
+6. Check the destination for a hard input limit before delivering. Slash-command fields, form inputs, and some agent-config surfaces either reject or silently truncate, and a correct prompt that gets clipped is worse than a shorter one. Where a limit applies to a surface used often, record the number in the guidance section below rather than generalising it into a rule.
 
 ## Safety And Scope
 
@@ -200,10 +220,11 @@ Use this mentally unless the user explicitly asks to see it:
 - output requirements
 - examples (default on for format-sensitive or structured-tier outputs)
 - XML structure (default on for structured-tier and above)
-- reasoning or validation instructions (omit if using extended thinking)
+- validation instructions only where there is something concrete to check against — never reasoning scaffolding
 - stop conditions and exclusions
-- model or config hints only when genuinely useful (including whether extended thinking applies)
-- sub-agent spawn criteria if orchestrator prompt
+- executor class, and effort level where the target exposes one
+- destination input limit, if the prompt is going somewhere that truncates
+- sub-agent spawn criteria and a delegation ceiling if orchestrator prompt
 
 ## Shortcut Triggers
 
@@ -226,4 +247,6 @@ Use this skill when the user says things like:
 - do not research the user's underlying topic unless they explicitly switch away from prompt-design mode
 - do not overcomplicate simple asks with unnecessary prompt engineering jargon
 - do not ask a long list of clarification questions when a clean first draft is good enough
-- do not add chain-of-thought scaffolding for models that support extended thinking
+- do not add chain-of-thought scaffolding — current models reason internally, and it competes with that
+- do not write a frontier-model prompt as a step-by-step script; state the goal and the constraints instead
+- do not hardcode model version names into a prompt or a skill unless the behaviour genuinely differs by version
