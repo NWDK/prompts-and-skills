@@ -20,7 +20,7 @@ Be precise about the other half, though, because "inert until you type its name"
 
 **Do the claims match the code?** That is the right question and the whole reason the `DECISIONS.md` files exist. They record what was tried, what was measured, and what was rejected — including the cases where the obvious approach turned out to be wrong. If a claim in a `SKILL.md` is not supported by the code beside it, that is a bug and worth raising as an issue.
 
-Where a tool has documented guarantees, those guarantees are also tests: `python3 tools/video-frames/test_extract.py` runs in about ten seconds on standard library alone, and CI runs it on Linux and macOS on every push. Several of those tests exist because the obvious approach was measurably wrong the first time.
+Where a tool has documented guarantees, those guarantees are also tests: `python3 tools/video-frames/test_extract.py` needs no test framework installed — just `unittest` from the standard library, plus that tool's own ffmpeg and Pillow dependencies, since it exercises the real thing rather than a mock. CI runs it on Linux and macOS on every push. Several of those tests exist because the obvious approach was measurably wrong the first time.
 
 **What are the known limitations?** Each skill's README has a "Known limits" section near the top rather than buried at the bottom. If a limitation is missing there, it was an oversight rather than a decision.
 

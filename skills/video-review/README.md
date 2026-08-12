@@ -80,7 +80,7 @@ Two more boundaries worth stating plainly: the optional model-assisted transcrip
 | Transcribe | whisper.cpp | shell, ~2.9 GB model | No transcript, so no cue pass. Supply your own `.srt` and the rest still works. |
 | Extract / dedup | ffmpeg + Pillow | shell, filesystem | Nothing works. This is the tool. |
 | Cue pass | your model | text only | Falls back to the visual sweep alone — you keep the frames, you lose "the moments someone said mattered". |
-| Map | Python stdlib | filesystem | Still works, but you read the whole folder: ~120k tokens instead of ~56k on a real run. |
+| Map | Python + Pillow | filesystem | Still works, but you read the whole folder: ~120k tokens instead of ~56k on a real run. |
 | Review + write | your model | **vision** | **The output stops being trustworthy.** No claim can be checked against a frame, so everything becomes unverified — a transcript summary in a defect log's clothing. |
 | Sub-agents | optional | — | Cue pass runs in the main thread instead. Costs context, changes nothing else. |
 

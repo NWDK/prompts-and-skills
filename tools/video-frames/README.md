@@ -28,7 +28,9 @@ ffmpeg, ffprobe and Pillow. See [SETUP.md](SETUP.md) — two commands.
 python3 tools/video-frames/test_extract.py
 ```
 
-33 tests, about ten seconds, standard library only. Fixtures are **generated** with ffmpeg at run time and thrown away, so there are no binaries in this repo and no assets to go stale. It runs on Linux and macOS in CI on every push.
+The suite runs in well under a minute. Fixtures are **generated** with ffmpeg at run time and thrown away, so there are no binaries in this repo and no assets to go stale. CI runs it on Linux and macOS on every push.
+
+**No test framework to install** — it is `unittest` from the standard library, so there is no pytest, no plugins, no lockfile. But it does need the *tool's own* dependencies, because it exercises the real extractor rather than mocking it: **ffmpeg and ffprobe** to build the fixtures, and **Pillow** because `extract.py` imports it at load. Without those the suite skips with a message pointing at [SETUP.md](SETUP.md) rather than failing.
 
 Worth knowing what it is biased toward, because it explains the odd-looking assertions. Every data-integrity bug this tool has had was invisible to a happy-path test — the run exited zero, printed a success line, and produced correct-looking output while deleting a file it did not own, or filing a frame under the wrong recording. So a lot of these tests **assert what must not have happened**: that a planted file is byte-for-byte unchanged, that a refused command wrote nothing at all. Those are the ones worth keeping.
 

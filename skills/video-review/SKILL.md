@@ -120,7 +120,7 @@ Three reasons, and the first one is the only one that bites hard. **A shared pat
 ### 1. Probe — show the cost before spending it
 
 ```bash
-python3 tools/video-frames/extract.py probe "$VIDEO"
+python3 "$VF/extract.py" probe "$VIDEO"
 ```
 
 Writes nothing. Prints the frame budget and the token ceiling for all three effort tiers. **Show this to whoever asked before continuing on anything over a few minutes** — the cost is theirs to accept, not yours to assume. A 17-minute recording runs around 135k visual tokens at `average`.
@@ -134,7 +134,7 @@ For a long recording, offer working section by section with `--start`/`--end` in
 ### 2. Transcribe
 
 ```bash
-tools/transcription/transcribe.sh "$VIDEO" <project-glossary>
+"$TR/transcribe.sh" "$VIDEO" <project-glossary>
 ```
 
 Local whisper.cpp, primed with `glossaries/_global.txt` (if you have one) plus the named project glossary so product nouns spell correctly. Writes `.transcript.txt` and `.srt` beside the video.
@@ -175,7 +175,7 @@ Asking for the verbatim quote is what lets the write step cite without re-readin
 ### 4. Extract
 
 ```bash
-python3 tools/video-frames/extract.py extract "$VIDEO" \
+python3 "$VF/extract.py" extract "$VIDEO" \
   --out "$FRAMES" --transcript "$SRT" --cues "$CUES" --effort average
 ```
 
@@ -188,7 +188,7 @@ Read `manifest.json`. It is the contract: each entry carries its real timestamp,
 Do not read the whole folder. Map first:
 
 ```bash
-python3 tools/video-frames/extract.py map "$FRAMES" \
+python3 "$VF/extract.py" map "$FRAMES" \
   --findings "D1=71.8,D2=95.6,V1=129.0"
 ```
 
@@ -209,7 +209,7 @@ List, explicitly, anything the recording raised that the frames could not confir
 **Give each gap its re-fetch command**, or the next person has to work out how to go back:
 
 ```bash
-python3 tools/video-frames/extract.py extract "$VIDEO" \
+python3 "$VF/extract.py" extract "$VIDEO" \
   --out "$FRAMES" --append --cues <seconds>
 ```
 
