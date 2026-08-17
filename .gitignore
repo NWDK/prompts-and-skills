@@ -8,6 +8,11 @@
 *.gguf
 *.pt
 
+# Local agent state — never publishable. settings.local.json carries machine
+# paths and permission grants, and worktrees/ accumulates stale agent copies of
+# the whole repo. Untracked was not enough: one `git add -A` would sweep them in.
+.claude/
+
 # Python
 __pycache__/
 *.pyc

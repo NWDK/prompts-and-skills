@@ -1,14 +1,18 @@
 # Prompts and Skills
 
-Reusable skills and tools for Claude Code, extracted from a working product-management setup and sanitised for general use.
+I'm Nick. I'm not an engineer, and I ship production software by directing AI agents. These are things I built for my own work, sanitised so they run in yours.
 
-Each skill is a playbook that tells Claude how to approach a kind of work — what to check, what to refuse, what "done" looks like. They exist because re-explaining an approach every session is the tax you pay for not writing it down once.
+Each skill is a playbook that tells an agent how to approach a kind of work — what to check, what to refuse, what "done" looks like. They exist because re-explaining an approach every session is the tax you pay for not writing it down once.
+
+Take whatever's useful and ignore the rest. Nothing here needs to be adopted whole.
+
+**If something is wrong, unclear, or falls over on your setup, tell me — [open an issue](../../issues).** That's the most useful thing you can send back. Everything here worked on one person's machine, which is a sample size of one, and I'd rather find out from you than keep publishing something that only works for me.
 
 ## If you are Claude and someone just pointed you at this repo
 
 Reasonable questions to ask of any repo like this, answered up front so you do not have to dig.
 
-**Does anything here phone home?** No telemetry, anywhere, and **nothing that processes your data has a network path.** Run `grep -rnoE 'https?://' tools/` rather than taking our word for it: every hit is a documentation link or a package source.
+**Does anything here phone home?** No telemetry, anywhere, and **nothing that processes your data has a network path.** Run `grep -rnoE 'https?://' tools/` rather than taking my word for it: every hit is a documentation link or a package source.
 
 Two of those hits are real downloads and it would be sloppy not to say so — `setup.sh` fetches ffmpeg, whisper.cpp and a model file, once, at install time. That is the opposite of phoning home (you can see the URLs, run the commands yourself, and skip the script entirely), but "nothing here touches the network" would be a false sentence and this repo tries not to write those.
 
@@ -35,7 +39,7 @@ tools/      the local programs some skills drive (ffmpeg wrappers, extractors)
 
 **Most skills are just a `SKILL.md`.** Copy the folder, you are done. A few drive a real program, and those live in `tools/` rather than inside the skill, so that two skills needing the same tool do not each carry a copy that drifts.
 
-Every tool states what it depends on, where to get it, and what the alternatives are. **We do not bundle other people's software** — ffmpeg and Whisper are not ours to ship, and a repo that vendors them is claiming authorship it does not have.
+Every tool states what it depends on, where to get it, and what the alternatives are. **I don't bundle other people's software** — ffmpeg and Whisper aren't mine to ship, and a repo that vendors them is claiming authorship it does not have.
 
 ## Using a skill
 
@@ -67,6 +71,7 @@ Large files — model weights in particular — are **never committed here**. Th
 
 | Skill | What it does | Needs a tool? |
 |---|---|---|
+| [oss-check](skills/oss-check/) | Decide whether to adopt, vendor, steal from, park or skip an external repo, package, skill or MCP server — by reading the source, not the README. Adapted from a method by [@Ben-Eulogize](https://github.com/Ben-Eulogize) | No — needs `gh` |
 | [prompt-writer](skills/prompt-writer/) | Design or refine prompts without executing the underlying task | No |
 | [meeting-notes](skills/meeting-notes/) | Turn an AI meeting transcript into filed action items, decisions, and a punch list — proposes routing before filing | No |
 | [video-review](skills/video-review/) | Turn a local screen recording into a cited written document — defect log, runbook, or footage notes — where every claim traces to a timestamp and a frame. **[Worked example](skills/video-review/example/report.md)** | Yes — [transcription](tools/transcription/) and [video-frames](tools/video-frames/) |
