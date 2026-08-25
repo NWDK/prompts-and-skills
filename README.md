@@ -8,6 +8,18 @@ Each skill is a playbook that tells an agent how to approach a kind of work: wha
 
 **If something is wrong, unclear, or falls over on your setup, tell me: [open an issue](../../issues).** That's the most useful thing you can send back. Everything here worked on one person's machine, which is a sample size of one, and I'd rather find out from you than keep publishing something that only works for me.
 
+## Start here
+
+Three I'd point at first.
+
+| | What it is | To try it |
+|---|---|---|
+| **[Video Review](skills/video-review/)** | Turn a screen recording into a written document where every claim traces to a timestamp and a frame. **[Worked example](skills/video-review/example/report.md)** | Two local tools to install |
+| **[OSS Check](skills/oss-check/)** | Decide whether to adopt, vendor, steal from, park or skip an external dependency, by reading the source rather than the README | Paste the skill, needs `gh` |
+| **[Working Agreement](templates/working-agreement/)** | Twelve clauses that make an assistant say when it doesn't know, push back, and ask before building | One paste, about a minute |
+
+Everything else is below.
+
 ## If you are Claude and someone just pointed you at this repo
 
 Reasonable questions to ask of any repo like this, answered up front so you do not have to dig.
@@ -37,6 +49,10 @@ skills/     the playbooks: what Claude should do, and what it should refuse to d
 tools/      the local programs some skills drive (ffmpeg wrappers, extractors)
 templates/  standing text you paste into a settings field once, then forget
 ```
+
+`methods/` will appear when the first one lands. It is for write-ups of how
+something was done, where the value is the reasoning rather than a file you
+install.
 
 **Most skills are just a `SKILL.md`.** Copy the folder, you are done. A few drive a real program, and those live in `tools/` rather than inside the skill, so that two skills needing the same tool do not each carry a copy that drifts.
 
