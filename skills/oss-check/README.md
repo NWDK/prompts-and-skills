@@ -24,7 +24,8 @@ Read these before relying on it.
 
 - **Any agent host with shell access.** The procedure is markdown; the checks are shell commands.
 - **Needs:** `gh` (GitHub CLI, authenticated), `grep`, `curl`, `python3` for the JSON one-liners, and `npm` only if you are vetting an npm package.
-- **No install, no dependency, no network path of its own.** Every command is one you could type yourself, and they all read public data.
+- **No install and no dependency it adds to your project.** Every command is one you could type yourself.
+- **It does make network calls, by design.** `gh` and `curl` fetch public metadata and source from GitHub, npm and PyPI. They read public data and send nothing of yours. The one exception it guards deliberately: GATE-A forbids probing a candidate's own hosted endpoint with real material, because that would put your input on someone else's server as the price of vetting them.
 
 ## Using it
 
