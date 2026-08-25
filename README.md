@@ -1,10 +1,10 @@
 # Prompts and Skills
 
-I'm Nick. I'm not an engineer, and I ship production software by directing AI agents. These are things I built for my own work, sanitised so they run in yours.
+I'm Nick. These are prompts, skills, rules and routines that work for me and that I use regularly. I'm sharing them in case they help you too.
 
-Each skill is a playbook that tells an agent how to approach a kind of work: what to check, what to refuse, what "done" looks like. They exist because re-explaining an approach every session is the tax you pay for not writing it down once.
+That's the whole pitch. Take what's useful, ignore the rest, nothing here needs to be adopted whole.
 
-Take whatever's useful and ignore the rest. Nothing here needs to be adopted whole.
+Each skill is a playbook that tells an agent how to approach a kind of work: what to check, what to refuse, what "done" looks like. Each one says why I built it and how, so you can decide whether the reasoning holds for you.
 
 **If something is wrong, unclear, or falls over on your setup, tell me: [open an issue](../../issues).** That's the most useful thing you can send back. Everything here worked on one person's machine, which is a sample size of one, and I'd rather find out from you than keep publishing something that only works for me.
 

@@ -38,18 +38,14 @@ explain technical terms as you use them"].
 ## If your box won't take it
 
 The clauses are 1,319 characters. With the example style line it's 1,436.
-Some hosts cap this field, some don't, and the caps move, so I've sized it
-for the small ones rather than print a number that'll be out of date by the
-time you read this. Your style line is your own budget.
+Some hosts cap this field and some don't, so I've sized it for the small
+ones.
 
-If it still won't fit, cut in this order. Clause 8 (question discipline) and
-clause 12 (proportion) go cheapest. Then trim the style examples down to
-what you actually care about.
-
-Try not to cut 1, 4, 5 or 11. They're the four that catch things you
-wouldn't otherwise spot.
+Cut clause 8 first, then 12, then trim the style examples. Try not to cut
+1, 4, 5 or 11: they're the four that catch things you wouldn't otherwise
+spot.
 
 ## Two habits
 
 Point at the line it broke when a guess gets through. Thank the pushback,
-including the times it's wrong. Without that it quietly stops working.
+including the times it's wrong.
