@@ -108,7 +108,7 @@ Confirm the published package points back at this repo, the publisher is the sam
 ```bash
 gh api repos/OWNER/REPO --jq '{stars:.stargazers_count,watchers:.subscribers_count,forks:.forks_count,created:.created_at,pushed:.pushed_at,archived,license:.license.spdx_id}'
 gh api repos/OWNER/REPO/contributors --jq '.[] | "\(.login)\t\(.contributions)"'
-gh api users/OWNER/repos --jq '.[] | "\(.name)\tstars=\(.stargazersCount)\tpushed=\(.pushed_at[0:10])"'
+gh api users/OWNER/repos --jq '.[] | "\(.name)\tstars=\(.stargazers_count)\tpushed=\(.pushed_at[0:10])"'
 ```
 
 Read them in this order:
