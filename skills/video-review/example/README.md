@@ -6,11 +6,11 @@ A complete run, end to end, so you can see what this skill produces before decid
 
 | File | What it is |
 |---|---|
-| [`report.md`](report.md) | The output — a defect log with every claim cited, and four declared gaps |
+| [`report.md`](report.md) | The output: a defect log with every claim cited, and four declared gaps |
 | [`make-example.sh`](make-example.sh) | Regenerates everything below. Real `extract.py`, shipped defaults, no mocks |
 | [`checkout-walkthrough.transcript.srt`](checkout-walkthrough.transcript.srt) | The narration |
 | `checkout-walkthrough.mp4` | Generated, not committed |
-| `checkout-walkthrough-frames/` | Generated, not committed — frames plus `manifest.json` |
+| `checkout-walkthrough-frames/` | Generated, not committed; frames plus `manifest.json` |
 
 ```bash
 ./make-example.sh        # needs ffmpeg + Pillow; ~5 seconds
@@ -18,7 +18,7 @@ A complete run, end to end, so you can see what this skill produces before decid
 
 ## Two things it is honest about
 
-**The recording is synthetic** — coloured rectangles standing in for a checkout page, built by ffmpeg. Nothing real was recorded, and the frames carry no readable text.
+**The recording is synthetic**: coloured rectangles standing in for a checkout page, built by ffmpeg. Nothing real was recorded, and the frames carry no readable text.
 
 **That turns out to be the useful part.** Because the frames cannot show text, the report has to declare four gaps it would rather fill, including one where the narration describes a validation error and the frame can only confirm that *something red is in the wrong place*. A report that closed that gap by inference would read better and be partly invented. Watching it refuse is more informative than any polished sample would be.
 

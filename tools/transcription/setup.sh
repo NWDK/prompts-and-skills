@@ -56,7 +56,7 @@ run() {
 }
 
 if [ "$DRY_RUN" -eq 1 ]; then
-  say "DRY RUN — printing the commands below. Nothing will be executed."
+  say "DRY RUN: printing the commands below. Nothing will be executed."
   say "Run them yourself if you would rather not execute this script at all."
 fi
 
@@ -97,7 +97,7 @@ if python3 -c "import PIL" >/dev/null 2>&1; then
 else
   # Deliberately the same command SETUP.md prints. If your Python is
   # externally managed (PEP 668) this will refuse, and the fix is yours to
-  # choose — a virtualenv, or --user, or your system package manager.
+  # choose: a virtualenv, or --user, or your system package manager.
   if ! run python3 -m pip install Pillow; then
     say ""
     say "error: pip refused to install Pillow."
@@ -128,7 +128,7 @@ elif [ -f "$MODEL_PATH" ]; then
   say "   delete the file and re-run."
 else
   say "   Downloading to a file, not piping anything into a shell."
-  say "   This is a large download — see the size table in SETUP.md."
+  say "   This is a large download. See the size table in SETUP.md."
   run mkdir -p "$MODEL_DIR"
   run curl -L -o "$MODEL_PATH" "$MODEL_URL"
 fi

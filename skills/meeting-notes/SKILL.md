@@ -15,18 +15,18 @@ Process a meeting transcript into:
 6. (Optional) a refreshed coordination current-state snapshot
 7. (Optional) a consolidated punch-list HTML, ready to publish
 
-> **Customize before first use.** This skill is generic. The places that depend on your setup — your project list and aliases, your filing paths, your transcription tool's quirks (the "glossary"), and your publishing step — are marked with **`CUSTOMIZE`** blocks. Fill those in once and the pipeline runs.
+> **Customize before first use.** This skill is generic. Four things depend on your setup: your project list and aliases, your filing paths, your transcription tool's quirks (the "glossary"), and your publishing step. All four are marked with **`CUSTOMIZE`** blocks. Fill those in once and the pipeline runs.
 
 ## When to use
 
 - Someone drops a transcript export into your transcript inbox folder
 - "process the transcript", "triage the meeting notes", "/meeting-notes <path>", "extract action items from this meeting"
-- A companion file (e.g. a `.docx`) sits alongside the transcript — that often signals embedded screenshots worth extracting
+- A companion file (e.g. a `.docx`) sits alongside the transcript, which often signals embedded screenshots worth extracting
 
 ## When not to use
 
-- A one-off action item mentioned in chat — just write it down
-- A transcript from a tool whose artifact pattern you haven't taught the skill yet — build a new variant first
+- A one-off action item mentioned in chat: just write it down
+- A transcript from a tool whose artifact pattern you haven't taught the skill yet: build a new variant first
 - A transcript already processed and filed (check the inbox for an `archive/<date>/` marker)
 
 ## Variants
@@ -36,10 +36,10 @@ A "variant" is a per-meeting-type config: the project routing table, filing dest
 Pick the variant by:
 1. Explicit argument (`/meeting-notes <variant> <path>`)
 2. The intake subfolder the file sits in (e.g. `inbox/<variant>-transcripts/`)
-3. Ask the user if neither is clear — do not guess.
+3. Ask the user if neither is clear. Do not guess.
 
 ```
-CUSTOMIZE — Variants
+CUSTOMIZE: Variants
 List your meeting types and where each one's config lives. Example:
 - team-sync   → variants/team-sync.md
 - customer    → variants/customer.md
@@ -51,17 +51,17 @@ A starter template is in variants/example.md.
 
 ## Pipeline (shared across variants)
 
-### Step 1 — Pre-flight
+### Step 1: Pre-flight
 
 Verify before doing anything. Halt and report which check failed; do not silently recover.
 
 1. **File exists** and is readable.
-2. **Looks like the expected transcript format** — most AI note-takers emit a recognisable structure (a summary block, a decisions block, a timestamped transcript). If the structure differs from what your variant expects, halt — it may be a different tool needing its own handling.
+2. **Looks like the expected transcript format.** Most AI note-takers emit a recognisable structure (a summary block, a decisions block, a timestamped transcript). If the structure differs from what your variant expects, halt: it may be a different tool needing its own handling.
 3. **Variant identified** (see above).
 4. **Variant file readable** at `variants/<variant>.md`.
 5. **If a companion document sits alongside** (e.g. a `.docx`): note it; screenshots get handled in Step 4. If none, skip screenshot handling.
 
-### Step 2 — Cleanup
+### Step 2: Cleanup
 
 Many auto-transcribers have a known artifact: the active speaker's captions get duplicated onto the other speaker's track as a fragmented "echo". Strip it.
 
@@ -83,34 +83,34 @@ Strip the phantom echo. Keep only the genuine speaker's line. When uncertain, pr
 Apply your glossary corrections (transcriber misspellings of names, products, vendors). Output the cleaned transcript to a working scratch location. Do not modify the original intake file.
 
 ```
-CUSTOMIZE — Glossary
+CUSTOMIZE: Glossary
 Maintain a glossary-corrections file of the misspellings your transcriber
 routinely produces (people, products, tools, jargon). Apply it during cleanup.
 A starter pattern is in glossary-corrections.md.
 ```
 
-### Step 3 — Extraction
+### Step 3: Extraction
 
 Three passes over the cleaned transcript.
 
-**Pass A — Action items.** Look for:
+**Pass A: Action items.** Look for:
 - Direct assignments ("you'll come back to me on X", "I'll take Y")
 - Implicit assignments (someone volunteers, or the other party accepts)
 - Anything explicitly flagged as belonging on the shared list
 
-The transcriber's own "next steps" / summary block is a starting point, never ground truth. Always re-scan the transcript body — automated passes routinely miss 20–50% of actual asks, and sometimes merge two distinct asks into one. Read the summary, decisions, AND details blocks first, then re-scan the body to fill gaps.
+The transcriber's own "next steps" / summary block is a starting point, never ground truth. Always re-scan the transcript body, because automated passes routinely miss 20–50% of actual asks, and sometimes merge two distinct asks into one. Read the summary, decisions, AND details blocks first, then re-scan the body to fill gaps.
 
 For each action item, capture: assignee, project (best guess), the ask in one line, a source quote (one short phrase + timestamp).
 
-**Pass B — Decisions.** Aligned (agreed), shelved (ruled out), needs-discussion (unresolved). Use the transcriber's decisions block as a start, then re-scan.
+**Pass B: Decisions.** Aligned (agreed), shelved (ruled out), needs-discussion (unresolved). Use the transcriber's decisions block as a start, then re-scan.
 
-**Pass C — Open questions.** "I don't know if…", "we should ask…", "still need to figure out…". These don't all become action items but should be surfaced.
+**Pass C: Open questions.** "I don't know if…", "we should ask…", "still need to figure out…". These don't all become action items but should be surfaced.
 
-### Step 4 — Screenshot extraction (only if a companion doc is present)
+### Step 4: Screenshot extraction (only if a companion doc is present)
 
 Convert the companion doc, extract embedded images to a working location. For each image: note where in the transcript it appeared; keep only genuinely useful context (a design review, a comparison); discard reactions, blank slides, decorative images. Useful images get filed alongside the relevant project's meeting-extract note. If no companion doc, skip this step.
 
-### Step 5 — Routing proposal
+### Step 5: Routing proposal
 
 Load the variant file. It contains the project list with aliases, filing destinations per project, and the punch-list format.
 
@@ -119,32 +119,32 @@ For each action item and decision, propose a route. For ambiguous items, flag ra
 **Present the routing proposal to the user and STOP.** Do not file anything. Format:
 
 ```
-ROUTING PROPOSAL — <variant> meeting, <date>
+ROUTING PROPOSAL: <variant> meeting, <date>
 
 Project: <project-name>
   - [Action] <assignee>: <one-line ask>  (source: <quote> @ <timestamp>)
   - [Decision] <aligned/shelved/needs-discussion>: <statement>
 
-AMBIGUOUS — needs your call:
+AMBIGUOUS (needs your call):
   - <item>: route to <option A> or <option B>?
 
-UNROUTED — couldn't match to a project:
+UNROUTED (couldn't match to a project):
   - <item>
 ```
 
 Wait for the user to confirm, redirect, or amend.
 
-### Step 6 — Filing (after approval)
+### Step 6: Filing (after approval)
 
 For each project, write a meeting-extract note. Structure:
 ```markdown
-# <Variant> Meeting Extract — YYYY-MM-DD
+# <Variant> Meeting Extract: YYYY-MM-DD
 
 Source: <path to the intake transcript>
 Attendees: <names>
 
 ## Action items
-- **<assignee>** — <one-line ask>
+- **<assignee>**: <one-line ask>
   > <quote excerpt> [@<timestamp>]
 
 ## Decisions
@@ -161,61 +161,61 @@ Attendees: <names>
 
 Screenshot paths in that template resolve against the **filed note**, not against this skill: the images kept in Step 4 go into a `screenshots/` folder created beside the note in the project's notes folder. There is no `screenshots/` directory here.
 
-For decisions that materially change a project's direction, also append a one-line entry to that project's status/decision log — do not rewrite the overview wholesale. If a project's notes folder doesn't exist, halt and ask the user where to file rather than creating folders unprompted.
+For decisions that materially change a project's direction, also append a one-line entry to that project's status/decision log. Do not rewrite the overview wholesale. If a project's notes folder doesn't exist, halt and ask the user where to file rather than creating folders unprompted.
 
 ```
-CUSTOMIZE — Filing destinations
+CUSTOMIZE: Filing destinations
 Define where extracts land per project, e.g.
 <workspace>/projects/<project-slug>/notes/YYYY-MM-DD-<variant>-meeting-extract.md
-Keep meeting extracts separate from your working session notes — different lifecycle.
+Keep meeting extracts separate from your working session notes: different lifecycle.
 ```
 
-### Step 7 — Coordination current-state (if the variant defines one)
+### Step 7: Coordination current-state (if the variant defines one)
 
-Some variants maintain a "current state" snapshot separate from the per-meeting extracts — a quick "what do I owe / what am I waiting on" read. If the variant specifies a current-state target, overwrite it now with the new snapshot (a complete refresh, not an append). Skip if the variant doesn't define one.
+Some variants maintain a "current state" snapshot separate from the per-meeting extracts, a quick "what do I owe / what am I waiting on" read. If the variant specifies a current-state target, overwrite it now with the new snapshot (a complete refresh, not an append). Skip if the variant doesn't define one.
 
-### Step 8 — Punch-list generation
+### Step 8: Punch-list generation
 
-Generate the consolidated punch-list HTML per the variant's spec (one self-contained file, inline styles, no external assets). Save to a working location. Offer to publish — but do not auto-publish; that's the user's explicit call.
+Generate the consolidated punch-list HTML per the variant's spec (one self-contained file, inline styles, no external assets). Save to a working location. Offer to publish, but do not auto-publish; that's the user's explicit call.
 
 ```
-CUSTOMIZE — Publishing
+CUSTOMIZE: Publishing
 If you publish the punch list to a live URL, name your publishing step here.
 Otherwise leave the HTML at the working path for the user to open.
 ```
 
-### Step 9 — Archive
+### Step 9: Archive
 
 Move the intake transcript (and companion doc) from the inbox to `inbox/<variant>-transcripts/archive/<date>/`. Keeps the inbox clean and prevents accidental reprocessing.
 
 ## Hard DON'Ts
 
 - Do not file anything before the user has confirmed the routing proposal.
-- Do not auto-publish — handing off the HTML is the user's call.
-- Do not trust the transcriber's summary/next-steps as complete — always re-scan the body.
+- Do not auto-publish. Handing off the HTML is the user's call.
+- Do not trust the transcriber's summary/next-steps as complete. Always re-scan the body.
 - Do not create new project folders. If routing suggests a project with no folder, surface it.
-- Do not modify the original intake transcript — always work from a cleaned copy.
-- Avoid time-based language in the outputs ("by Friday", "this week") if your team tracks by state rather than date — state-code instead (Active / In progress / Blocked / Needs input).
+- Do not modify the original intake transcript. Always work from a cleaned copy.
+- Avoid time-based language in the outputs ("by Friday", "this week") if your team tracks by state rather than date. State-code instead (Active / In progress / Blocked / Needs input).
 
 ## Adopting this skill in another workspace
 
 Split it into what transfers and what you have to write yourself, and don't confuse the two.
 
-**Portable — take as-is:**
+**Portable (take as-is):**
 
 - The cleanup logic: phantom-echo stripping and fragment reassembly.
-- The glossary-corrections *pattern*. The rows are yours, but the mistakes are a property of your transcriber, not your workspace — whoever else uses the same tool will need the same kind of file.
+- The glossary-corrections *pattern*. The rows are yours, but the mistakes are a property of your transcriber, not your workspace, so whoever else uses the same tool will need the same kind of file.
 - The extraction logic: action items, decisions, open questions, and any status/action split your meeting type needs.
 - The pipeline shape: pre-flight → cleanup → extract → propose routing → **stop for approval** → file → punch list → archive.
 - The disciplines: propose before filing, never trust the transcriber's own summary as complete, don't create folders unprompted.
 
-**Not portable — you write these:**
+**Not portable (you write these):**
 
 - Filing destinations, folder names, and the intake location.
 - The variant routing tables: project aliases, ownership defaults, assignee resolution.
 - Whether a coordination ledger or current-state snapshot exists for you at all.
 - The punch-list template and any publishing handoff.
 
-Set your own filing locations and your own conventions for what happens to each extracted document. This skill describes a process for triaging a meeting; where the triaged output goes is your call. Variant files are the right place to encode that — they are isolated from the pipeline and from the glossary, so swapping them doesn't disturb anything else.
+Set your own filing locations and your own conventions for what happens to each extracted document. This skill describes a process for triaging a meeting; where the triaged output goes is your call. Variant files are the right place to encode that: they are isolated from the pipeline and from the glossary, so swapping them doesn't disturb anything else.
 
-**Budget the variant properly — it is the real work.** A variant is not just a routing table. It is where meeting-type-specific extraction knowledge lives: how a standup differs from a kickoff, which utterances are status rather than asks, who owns what by default, which patterns in that meeting shape mislead a naive pass. A thin variant produces thin extraction, and that is the most common way this skill disappoints. `variants/example.md` shows the full shape at realistic depth.
+**Budget the variant properly. It is the real work.** A variant is not just a routing table. It is where meeting-type-specific extraction knowledge lives: how a standup differs from a kickoff, which utterances are status rather than asks, who owns what by default, which patterns in that meeting shape mislead a naive pass. A thin variant produces thin extraction, and that is the most common way this skill disappoints. `variants/example.md` shows the full shape at realistic depth.

@@ -1,6 +1,6 @@
-# Setup — first run on a new machine
+# Setup: first run on a new machine
 
-Three things to install. **Transcription itself runs entirely on your machine and uploads nothing** — that is the point of the tool. (Setup does download the programs and a model file over the network, once. And if you then hand the transcript to a cloud model for the optional cleanup pass, that text goes to your provider like anything else you send it.)
+Three things to install. **Transcription itself runs entirely on your machine and uploads nothing.** That is the point of the tool. (Setup does download the programs and a model file over the network, once. And if you then hand the transcript to a cloud model for the optional cleanup pass, that text goes to your provider like anything else you send it.)
 
 Run these from the root of your copy of this repo. If you have put the tools somewhere else, adjust the paths to match.
 
@@ -35,7 +35,7 @@ curl -L -o tools/whisper-models/ggml-large-v3.bin \
 
 There are cloud transcription APIs that need no download and no install. This tool deliberately does not use one, and it is worth understanding the reason rather than assuming nobody considered it.
 
-**The audio in a screen recording is usually more sensitive than it looks.** Someone narrating a walkthrough is talking over unreleased features, pre-launch campaigns, landing pages that are not live, customer data on screen. "It's only a marketing page" is exactly the assumption that gets something uploaded that should not have been — and the person recording rarely stops to make that call mid-sentence.
+**The audio in a screen recording is usually more sensitive than it looks.** Someone narrating a walkthrough is talking over unreleased features, pre-launch campaigns, landing pages that are not live, customer data on screen. "It's only a marketing page" is exactly the assumption that gets something uploaded that should not have been, and the person recording rarely stops to make that call mid-sentence.
 
 So the tool has no network path at all. Not a setting, not a fallback. That costs a download; it buys never having to make that judgement under time pressure.
 
@@ -56,7 +56,7 @@ Swap the filename in the URL above, then point the tool at it:
 export WHISPER_MODEL=/full/path/to/ggml-base.en.bin
 ```
 
-**How to choose.** If the recording is mostly plain speech, start small — you will know inside one recording whether it holds up, and moving up is one more download. If it is full of product names, brand terms, or people's names, start at `medium.en` or `large-v3`, because those are exactly what small models mangle.
+**How to choose.** If the recording is mostly plain speech, start small. You will know inside one recording whether it holds up, and moving up is one more download. If it is full of product names, brand terms, or people's names, start at `medium.en` or `large-v3`, because those are exactly what small models mangle.
 
 ### If the transcript comes back rough
 
@@ -88,7 +88,7 @@ tools/transcription/transcribe.sh recording.mov my-project
 
 Only add spellings you are **sure** of. A wrong spelling in the glossary actively biases the transcript toward the wrong spelling, which is worse than not having one.
 
-There is a second, optional glossary at `glossaries/_global.txt`, prepended to every run whatever project you name. It is for the handful of terms that recur across everything you record — your own company name, the people who are always on the call, the fonts you always argue about. This repo ships without one, because yours would be entirely different to anyone else's. Create it the same way if you want it, or skip it and the tool runs on the project glossary alone.
+There is a second, optional glossary at `glossaries/_global.txt`, prepended to every run whatever project you name. It is for the handful of terms that recur across everything you record: your own company name, the people who are always on the call, the fonts you always argue about. This repo ships without one, because yours would be entirely different to anyone else's. Create it the same way if you want it, or skip it and the tool runs on the project glossary alone.
 
 ## Check it works
 

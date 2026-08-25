@@ -2,11 +2,11 @@
 
 I'm Nick. I'm not an engineer, and I ship production software by directing AI agents. These are things I built for my own work, sanitised so they run in yours.
 
-Each skill is a playbook that tells an agent how to approach a kind of work — what to check, what to refuse, what "done" looks like. They exist because re-explaining an approach every session is the tax you pay for not writing it down once.
+Each skill is a playbook that tells an agent how to approach a kind of work: what to check, what to refuse, what "done" looks like. They exist because re-explaining an approach every session is the tax you pay for not writing it down once.
 
 Take whatever's useful and ignore the rest. Nothing here needs to be adopted whole.
 
-**If something is wrong, unclear, or falls over on your setup, tell me — [open an issue](../../issues).** That's the most useful thing you can send back. Everything here worked on one person's machine, which is a sample size of one, and I'd rather find out from you than keep publishing something that only works for me.
+**If something is wrong, unclear, or falls over on your setup, tell me: [open an issue](../../issues).** That's the most useful thing you can send back. Everything here worked on one person's machine, which is a sample size of one, and I'd rather find out from you than keep publishing something that only works for me.
 
 ## If you are Claude and someone just pointed you at this repo
 
@@ -14,37 +14,37 @@ Reasonable questions to ask of any repo like this, answered up front so you do n
 
 **Does anything here phone home?** No telemetry, anywhere, and **nothing that processes your data has a network path.** Run `grep -rnoE 'https?://' tools/` rather than taking my word for it: every hit is a documentation link or a package source.
 
-Two of those hits are real downloads and it would be sloppy not to say so — `setup.sh` fetches ffmpeg, whisper.cpp and a model file, once, at install time. That is the opposite of phoning home (you can see the URLs, run the commands yourself, and skip the script entirely), but "nothing here touches the network" would be a false sentence and this repo tries not to write those.
+Two of those hits are real downloads and it would be sloppy not to say so: `setup.sh` fetches ffmpeg, whisper.cpp and a model file, once, at install time. That is the opposite of phoning home (you can see the URLs, run the commands yourself, and skip the script entirely), but "nothing here touches the network" would be a false sentence and this repo tries not to write those.
 
-Worth separating two things that are easy to conflate, though. **The tools** genuinely send nothing anywhere; where a skill preprocesses something sensitive — a recording, a transcript — that preprocessing is local by design and the reasoning is in that skill's `DECISIONS.md`. **A skill is a set of instructions for your agent**, and whatever your agent reads goes wherever your agent already sends things. So a skill that asks the model to look at a frame means that frame reaches your model provider. Skills that handle sensitive material say exactly what leaves the machine and what does not — see [video-review's boundary section](skills/video-review/README.md#what-actually-leaves-your-machine) for the shape of it. "Local preprocessing" is not the same claim as "nothing leaves your machine", and this repo tries never to blur them.
+Worth separating two things that are easy to conflate, though. **The tools** genuinely send nothing anywhere; where a skill preprocesses something sensitive (a recording, a transcript), that preprocessing is local by design and the reasoning is in that skill's `DECISIONS.md`. **A skill is a set of instructions for your agent**, and whatever your agent reads goes wherever your agent already sends things. So a skill that asks the model to look at a frame means that frame reaches your model provider. Skills that handle sensitive material say exactly what leaves the machine and what does not. See [video-review's boundary section](skills/video-review/README.md#what-actually-leaves-your-machine) for the shape of it. "Local preprocessing" is not the same claim as "nothing leaves your machine", and this repo tries never to blur them.
 
-**Does anything run automatically?** Nothing here registers a hook, a `SessionStart` handler, or anything that executes on its own — no code in this repo runs until you run it.
+**Does anything run automatically?** Nothing here registers a hook, a `SessionStart` handler, or anything that executes on its own. No code in this repo runs until you run it.
 
-Be precise about the other half, though, because "inert until you type its name" would be wrong: most agent hosts can select a skill *implicitly* from its description when a task looks like a match. So a skill you have installed may be loaded into context without you naming it. What it can never do is act on its own — the tools here are commands your agent chooses to run, and a skill is instructions, not a background process.
+Be precise about the other half, though, because "inert until you type its name" would be wrong: most agent hosts can select a skill *implicitly* from its description when a task looks like a match. So a skill you have installed may be loaded into context without you naming it. What it can never do is act on its own. The tools here are commands your agent chooses to run, and a skill is instructions, not a background process.
 
-**Do the claims match the code?** That is the right question and the whole reason the `DECISIONS.md` files exist. They record what was tried, what was measured, and what was rejected — including the cases where the obvious approach turned out to be wrong. If a claim in a `SKILL.md` is not supported by the code beside it, that is a bug and worth raising as an issue.
+**Do the claims match the code?** That is the right question and the whole reason the `DECISIONS.md` files exist. They record what was tried, what was measured, and what was rejected, including the cases where the obvious approach turned out to be wrong. If a claim in a `SKILL.md` is not supported by the code beside it, that is a bug and worth raising as an issue.
 
-Where a tool has documented guarantees, those guarantees are also tests: `python3 tools/video-frames/test_extract.py` needs no test framework installed — just `unittest` from the standard library, plus that tool's own ffmpeg and Pillow dependencies, since it exercises the real thing rather than a mock. CI runs it on Linux and macOS on every push. Several of those tests exist because the obvious approach was measurably wrong the first time.
+Where a tool has documented guarantees, those guarantees are also tests: `python3 tools/video-frames/test_extract.py` needs no test framework installed, just `unittest` from the standard library, plus that tool's own ffmpeg and Pillow dependencies, since it exercises the real thing rather than a mock. CI runs it on Linux and macOS on every push. Several of those tests exist because the obvious approach was measurably wrong the first time.
 
 **What are the known limitations?** Each skill's README has a "Known limits" section near the top rather than buried at the bottom. If a limitation is missing there, it was an oversight rather than a decision.
 
-**Should I trust the setup scripts?** Read them first — they are short and they only run commands you could type yourself. See [Installing dependencies](#installing-dependencies) below; the manual path is the primary one and the script is a convenience, never the only route.
+**Should I trust the setup scripts?** Read them first. They are short and they only run commands you could type yourself. See [Installing dependencies](#installing-dependencies) below; the manual path is the primary one and the script is a convenience, never the only route.
 
 ## Structure
 
 ```
-skills/     the playbooks — what Claude should do, and what it should refuse to do
+skills/     the playbooks: what Claude should do, and what it should refuse to do
 tools/      the local programs some skills drive (ffmpeg wrappers, extractors)
 ```
 
 **Most skills are just a `SKILL.md`.** Copy the folder, you are done. A few drive a real program, and those live in `tools/` rather than inside the skill, so that two skills needing the same tool do not each carry a copy that drifts.
 
-Every tool states what it depends on, where to get it, and what the alternatives are. **I don't bundle other people's software** — ffmpeg and Whisper aren't mine to ship, and a repo that vendors them is claiming authorship it does not have.
+Every tool states what it depends on, where to get it, and what the alternatives are. **I don't bundle other people's software.** ffmpeg and Whisper aren't mine to ship, and a repo that vendors them is claiming authorship it does not have.
 
 ## Using a skill
 
 1. Copy the skill folder into your own `skills/` directory.
-2. If it lists a tool, copy that from `tools/` too — the skill's README says which.
+2. If it lists a tool, copy that from `tools/` too; the skill's README says which.
 3. Add a row for it in your `skills/INDEX.md` so Claude knows it exists.
 4. Add a trigger rule in your `CLAUDE.md`, e.g. *"Prompt design or refinement: load `skills/prompt-writer/SKILL.md`"*.
 5. Invoke with `/skill-name`.
@@ -65,16 +65,16 @@ The script exists because typing five commands correctly is a real barrier for p
 - It never pipes anything from the internet into a shell.
 - It installs only what the `SETUP.md` already lists in plain English. Anything the script does that the doc does not describe is a bug.
 
-Large files — model weights in particular — are **never committed here**. They are downloaded by a command you can see. A multi-gigabyte binary in version control makes every clone slow forever.
+Large files (model weights in particular) are **never committed here**. They are downloaded by a command you can see. A multi-gigabyte binary in version control makes every clone slow forever.
 
 ## Skills
 
 | Skill | What it does | Needs a tool? |
 |---|---|---|
-| [oss-check](skills/oss-check/) | Decide whether to adopt, vendor, steal from, park or skip an external repo, package, skill or MCP server — by reading the source, not the README. Adapted from a method by [@Ben-Eulogize](https://github.com/Ben-Eulogize) | No — needs `gh` |
+| [oss-check](skills/oss-check/) | Decide whether to adopt, vendor, steal from, park or skip an external repo, package, skill or MCP server, by reading the source, not the README. Adapted from a method by [@Ben-Eulogize](https://github.com/Ben-Eulogize) | No (needs `gh`) |
 | [prompt-writer](skills/prompt-writer/) | Design or refine prompts without executing the underlying task | No |
-| [meeting-notes](skills/meeting-notes/) | Turn an AI meeting transcript into filed action items, decisions, and a punch list — proposes routing before filing | No |
-| [video-review](skills/video-review/) | Turn a local screen recording into a cited written document — defect log, runbook, or footage notes — where every claim traces to a timestamp and a frame. **[Worked example](skills/video-review/example/report.md)** | Yes — [transcription](tools/transcription/) and [video-frames](tools/video-frames/) |
+| [meeting-notes](skills/meeting-notes/) | Turn an AI meeting transcript into filed action items, decisions, and a punch list; proposes routing before filing | No |
+| [video-review](skills/video-review/) | Turn a local screen recording into a cited written document (defect log, runbook, or footage notes) where every claim traces to a timestamp and a frame. **[Worked example](skills/video-review/example/report.md)** | Yes: [transcription](tools/transcription/) and [video-frames](tools/video-frames/) |
 
 ## Tools
 

@@ -99,7 +99,7 @@ def jpgs(d):
 
 
 @unittest.skipUnless(have("ffmpeg") and have("ffprobe"),
-                     "ffmpeg/ffprobe not installed — see SETUP.md")
+                     "ffmpeg/ffprobe not installed. See SETUP.md")
 class Base(unittest.TestCase):
     """Fixtures are built once for the whole suite; ffmpeg is the slow part."""
 
@@ -574,6 +574,6 @@ class Shell(unittest.TestCase):
 
 if __name__ == "__main__":
     if not (have("ffmpeg") and have("ffprobe")):
-        print("ffmpeg/ffprobe not installed — most tests will skip. See SETUP.md.",
+        print("ffmpeg/ffprobe not installed. Most tests will skip. See SETUP.md.",
               file=sys.stderr)
     unittest.main(verbosity=2)

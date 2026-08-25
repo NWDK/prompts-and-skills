@@ -25,7 +25,7 @@ set -euo pipefail
 TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Resolved from this script's own location, not an absolute path, so the tool
 # works in any checkout rather than only the machine it was written on. Override
-# with WHISPER_MODEL to use a different size — see SETUP.md for the tradeoff.
+# with WHISPER_MODEL to use a different size. See SETUP.md for the tradeoff.
 MODEL="${WHISPER_MODEL:-$TOOL_DIR/../whisper-models/ggml-large-v3.bin}"
 LANG_CODE="${WHISPER_LANG:-en}"
 GLOSS_DIR="$TOOL_DIR/glossaries"
@@ -38,7 +38,7 @@ PROJECT="${2:-}"
 
 [ -f "$AUDIO" ] || die "audio file not found: $AUDIO"
 [ -f "$MODEL" ] || die "model not found: $MODEL
-  First run on this machine? See tools/transcription/SETUP.md — one command downloads it.
+  First run on this machine? See tools/transcription/SETUP.md; one command downloads it.
   Already have a model elsewhere? Point at it:  export WHISPER_MODEL=/path/to/ggml-*.bin"
 command -v whisper-cli >/dev/null || die "whisper-cli not installed. Run: brew install whisper-cpp   (see tools/transcription/SETUP.md)"
 command -v ffmpeg >/dev/null || die "ffmpeg not installed. Run: brew install ffmpeg   (see tools/transcription/SETUP.md)"
@@ -56,7 +56,7 @@ if [ -n "$PROJECT" ]; then
     # Neither glossary exists, so whisper runs unprimed. Say that plainly rather
     # than implying a fallback that is not there, and name the fix.
     echo "Note: no glossary for project '$PROJECT' ($PFILE), and no _global.txt either." >&2
-    echo "      Running unprimed — expect product and people names to be mis-heard." >&2
+    echo "      Running unprimed. Expect product and people names to be mis-heard." >&2
     echo "      To fix: cp $GLOSS_DIR/_template.txt $PFILE" >&2
   fi
 fi

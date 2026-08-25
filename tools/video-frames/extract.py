@@ -757,11 +757,11 @@ def cmd_map(args):
     for r in rows:
         notes = []
         if r["captured_elsewhere"]:
-            notes.append(f"image captured {_mmss(r['captured_at'])} — screen unchanged since")
+            notes.append(f"image captured {_mmss(r['captured_at'])}, screen unchanged since")
         if r["shared_with"]:
             notes.append("also serves " + ", ".join(r["shared_with"]))
         print(f"| {r['id']} | {_mmss(r['cited_at'])} | `{r['file']}` | "
-              f"{'; '.join(notes) or '—'} |")
+              f"{'; '.join(notes) or '-'} |")
     print()
 
 

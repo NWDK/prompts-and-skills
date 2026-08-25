@@ -1,4 +1,4 @@
-# Setup — video-frames
+# Setup: video-frames
 
 Two commands. Nothing is downloaded beyond standard packages, and there is no model file for this tool.
 
@@ -13,7 +13,7 @@ python3 -m pip install Pillow
 | **ffprobe** | Ships with ffmpeg, same install | Reads the real duration, resolution and frame rate. The tool never assumes these. |
 | **Pillow** | A Python library for reading and resizing images | Compares frames to decide whether the screen actually changed |
 
-Python 3 itself is assumed — `python3 --version` should print something. macOS ships it.
+Python 3 itself is assumed: `python3 --version` should print something. macOS ships it.
 
 Not on macOS? ffmpeg is packaged everywhere; only the `brew` line is macOS-specific.
 

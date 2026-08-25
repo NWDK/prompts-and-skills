@@ -7,7 +7,7 @@
 # Builds a synthetic 24-second "screen recording" of a fake checkout page with
 # three deliberate defects, runs the real extraction pipeline over it, and leaves
 # the manifest and frames behind. The report beside this script was written from
-# those frames by hand, following SKILL.md, and is not regenerated here — the
+# those frames by hand, following SKILL.md, and is not regenerated here. The
 # writing step is the model's job, which is the entire point of the skill.
 #
 # Nothing here is a mock. `extract.py` is the shipped tool with the shipped

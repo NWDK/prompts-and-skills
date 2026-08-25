@@ -1,8 +1,8 @@
-# Variant — Example (team sync / standup)
+# Variant: Example (team sync / standup)
 
 A variant config for one meeting type. Copy this to `variants/<your-variant>.md` and fill it in. This example models a recurring team standup that spans several projects.
 
-**A variant is not just a routing table.** Roughly half of what makes extraction good lives below the routing section — how this meeting type actually sounds, which utterances are status rather than asks, who owns what when nobody is named. A variant that stops at the routing table produces thin extracts. Budget accordingly: a real one runs to a couple of hundred lines.
+**A variant is not just a routing table.** Roughly half of what makes extraction good lives below the routing section: how this meeting type actually sounds, which utterances are status rather than asks, who owns what when nobody is named. A variant that stops at the routing table produces thin extracts. Budget accordingly: a real one runs to a couple of hundred lines.
 
 ## Trigger conditions
 
@@ -11,18 +11,18 @@ This variant applies when any of these is true:
 - The user invokes `/meeting-notes team-sync <path>` explicitly
 - The transcript's attendee list matches this meeting's regular participants
 
-If a transcript has other attendees (a customer, a contractor, an exec), it's probably a different meeting type — halt and tell the user a different variant is needed.
+If a transcript has other attendees (a customer, a contractor, an exec), it's probably a different meeting type. Halt and tell the user a different variant is needed.
 
 ## Speaker identification
 
-Transcribers identify people inconsistently — by email in the header, by display name in the body, sometimes by a name that differs between the two. Map them once here so extraction doesn't have to guess. This extends `glossary-corrections.md`; the glossary fixes spellings, this table resolves *identity*.
+Transcribers identify people inconsistently: by email in the header, by display name in the body, sometimes by a name that differs between the two. Map them once here so extraction doesn't have to guess. This extends `glossary-corrections.md`; the glossary fixes spellings, this table resolves *identity*.
 
 | Appears as | Canonical person |
 |---|---|
-| `first.last@example.com` | First — their work email |
-| `personal-handle@mailprovider.com` | First — their personal account; same person, different meeting invites |
-| Display name with surname ("First Last") | First — use first name only in extracts |
-| A role word the team uses out loud ("the designer", "our backend guy") | First — resolve to the person |
+| `first.last@example.com` | First (their work email) |
+| `personal-handle@mailprovider.com` | First (their personal account; same person, different meeting invites) |
+| Display name with surname ("First Last") | First (use first name only in extracts) |
+| A role word the team uses out loud ("the designer", "our backend guy") | First (resolve to the person) |
 
 Record how you want them rendered in extracts (first name only is usually right) and note any identity you are guessing at, so the first run can confirm it rather than silently locking in an error.
 
@@ -35,17 +35,17 @@ When routing action items, match transcript references to the canonical project 
 | `design-system` | "DS", "the design system", "components", "tokens" | `projects/design-system/notes/YYYY-MM-DD-team-sync-meeting-extract.md` |
 | `marketing-site` | "the site", "website", "landing pages", "SEO" | `projects/marketing-site/notes/YYYY-MM-DD-team-sync-meeting-extract.md` |
 | `mobile-app` | "the app", "iOS", "Android", "mobile" | `projects/mobile-app/notes/YYYY-MM-DD-team-sync-meeting-extract.md` |
-| `coordination` | admin items, "I'll send you X", tooling that supports the team's own workflow | `projects/coordination/notes/...` — AND updates `projects/coordination/current-state.md` (see below) |
+| `coordination` | admin items, "I'll send you X", tooling that supports the team's own workflow | `projects/coordination/notes/...`; AND updates `projects/coordination/current-state.md` (see below) |
 
 ### Routing heuristics
 - A feature-specific item routes to the project that owns that feature; if unclear, route to your "source of truth" project and flag.
 - Prompt/AI-tooling items route to whichever project the prompt belongs to.
 - Research/competitor items route to your strategy project unless clearly tactical for one project.
 - Workflow / "I'll send you X" / housekeeping items route to `coordination`.
-- An item you can't cleanly match goes in the AMBIGUOUS section — do not guess.
+- An item you can't cleanly match goes in the AMBIGUOUS section. Do not guess.
 
 ### Project has no folder yet
-If routing identifies a project with no folder, surface it separately. Don't create folders — ask the user where to file.
+If routing identifies a project with no folder, surface it separately. Don't create folders. Ask the user where to file.
 
 ## Extraction rules for this meeting type
 
@@ -68,7 +68,7 @@ These go in a `## Status updates` section, separate from `## Action items`. Don'
 - Volunteered ("I'll do X") → the speaker.
 - Unowned ("we should fix...", "it needs to...") → fall back to project ownership, and say in the extract that ownership was inferred rather than stated.
 
-Record your ownership defaults here — one line per project — so the unowned case has somewhere to land.
+Record your ownership defaults here (one line per project) so the unowned case has somewhere to land.
 
 ### Decisions are not tasks
 
@@ -76,11 +76,11 @@ A choice about *how* something will work is a decision, even when it sounds conc
 
 ### Open questions that block
 
-In a standup, an open question is often blocking someone's work. Flag any question where someone is currently waiting on the answer — those carry a different priority from curiosity-driven ones, and they're what the next meeting should open with.
+In a standup, an open question is often blocking someone's work. Flag any question where someone is currently waiting on the answer. Those carry a different priority from curiosity-driven ones, and they're what the next meeting should open with.
 
 ## Meeting-shape patterns to recognise
 
-These are the ones that mislead a naive extraction pass on this meeting type. Yours will differ — collect them as you notice them, because this section is what makes the variant earn its length.
+These are the ones that mislead a naive extraction pass on this meeting type. Yours will differ. Collect them as you notice them, because this section is what makes the variant earn its length.
 
 - **Round-robin opener.** "Anyone want to go first?" / "I can start" signals structured per-person reporting. Treat each following speaker block as that person's status segment until the next handoff.
 - **Demo narration is not an ask.** When someone shares a screen and narrates what they built, that is status. Distinguish walkthrough sentences from forward-looking commitments.
@@ -88,7 +88,7 @@ These are the ones that mislead a naive extraction pass on this meeting type. Yo
 - **Deferred deep-dives are real items.** "Let's book a session on X" is an action item even though it's only scheduling. Capture it.
 - **Dual classification is fine.** In-flight work often has a status face ("X is happening") and an action face ("next, do Y to it"). File both.
 - **Re-check the transcriber's own "next steps" for state.** Those blocks don't distinguish already-done from in-progress from fresh ask. For each one, scan the body to find the actual state, then route to status or action accordingly.
-- **Silence is not a gap to fill.** In a larger standup one attendee may have no status content at all. An empty section for them is correct — don't manufacture one.
+- **Silence is not a gap to fill.** In a larger standup one attendee may have no status content at all. An empty section for them is correct. Don't manufacture one.
 
 ## Output shape
 
@@ -97,18 +97,18 @@ These are the ones that mislead a naive extraction pass on this meeting type. Yo
 Same base structure as `SKILL.md` Step 6, plus the status section this meeting type needs:
 
 ```markdown
-# Team Sync Meeting Extract — YYYY-MM-DD
+# Team Sync Meeting Extract: YYYY-MM-DD
 
 Source: <path to the intake transcript>
 Meeting type: Standup / Kickoff / Project sync
 Attendees: <names>
 
 ## Status updates
-- **<person>** — <one-line summary> · State: In progress / Closed / Blocked
+- **<person>**: <one-line summary> · State: In progress / Closed / Blocked
   > <quote excerpt> [@<timestamp>]
 
 ## Action items
-- **<assignee>** — <one-line ask>
+- **<assignee>**: <one-line ask>
   > <quote excerpt> [@<timestamp>]
 
 ## Decisions
@@ -117,7 +117,7 @@ Attendees: <names>
 - **Needs discussion**: <statement>
 
 ## Open questions
-- <question> — _(blocking <who>, if applicable)_
+- <question> _(blocking <who>, if applicable)_
 
 ## Screenshots (if any)
 <one image link per kept screenshot>
@@ -129,10 +129,10 @@ State the negative scope explicitly, or a future run will helpfully update somet
 
 ## Current-state update (optional)
 
-If this variant maintains a quick "what do I owe / what am I waiting on" snapshot, overwrite it after filing. It's a snapshot, not a history — fully replace each run. State-coded, not time-coded.
+If this variant maintains a quick "what do I owe / what am I waiting on" snapshot, overwrite it after filing. It's a snapshot, not a history. Fully replace each run. State-coded, not time-coded.
 
 ```markdown
-# <Team> — Current State
+# <Team>: Current State
 **Last updated**: YYYY-MM-DD
 
 ## What I owe
@@ -150,14 +150,14 @@ If this variant maintains a quick "what do I owe / what am I waiting on" snapsho
 
 ## Punch-list HTML template
 
-Self-contained, inline styles, no external assets. Neutral styling — swap colours/fonts for your own brand.
+Self-contained, inline styles, no external assets. Neutral styling. Swap colours/fonts for your own brand.
 
 ```html
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Punch List — YYYY-MM-DD</title>
+<title>Punch List: YYYY-MM-DD</title>
 <meta name="description" content="Active action items from the YYYY-MM-DD sync, grouped by project.">
 <style>
   :root { --bg:#faf8f5; --ink:#1c1917; --muted:#78716c; --rule:#e7e5e4; --a:#2563eb; --b:#16a34a; --warn:#dc2626; }
@@ -201,8 +201,8 @@ Self-contained, inline styles, no external assets. Neutral styling — swap colo
 ```
 
 Template notes:
-- **Owner colour coding** — give each regular participant a colour; carry the same colours to carried-over items.
-- **Carry-over items** — when generating, scan the most recent extract in each project's notes folder for items not marked done; include them at the top of that project's section, annotated `(carried from YYYY-MM-DD)`. Note that nothing in the pipeline marks items done — if you want carry-over to converge rather than grow, that has to become a habit or a step you add.
+- **Owner colour coding**: give each regular participant a colour; carry the same colours to carried-over items.
+- **Carry-over items**: when generating, scan the most recent extract in each project's notes folder for items not marked done; include them at the top of that project's section, annotated `(carried from YYYY-MM-DD)`. Note that nothing in the pipeline marks items done, so if you want carry-over to converge rather than grow, that has to become a habit or a step you add.
 
 ## Hand-off
 
@@ -218,4 +218,4 @@ After the HTML is generated: show the user (a local file link is fine), ask whet
 
 ## Provenance
 
-Note when the variant was built, which meeting types it covers, and what it deliberately doesn't handle yet. A variant accumulates hard-won pattern knowledge — recording where it came from stops a future edit from undoing a lesson.
+Note when the variant was built, which meeting types it covers, and what it deliberately doesn't handle yet. A variant accumulates hard-won pattern knowledge, and recording where it came from stops a future edit from undoing a lesson.

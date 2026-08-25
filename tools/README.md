@@ -6,7 +6,7 @@ A tool lives in this directory rather than inside the skill that uses it, so two
 
 ## What a tool in here is, and is not
 
-**Is:** a small program written for this repo — usually a wrapper that drives something standard like ffmpeg, plus the judgement about how to drive it.
+**Is:** a small program written for this repo, usually a wrapper that drives something standard like ffmpeg, plus the judgement about how to drive it.
 
 **Is not:** ffmpeg, Whisper, Python libraries, or anything else with its own maintainers. Those are dependencies, named and linked, never bundled. Vendoring someone else's software into a repo claims an authorship you do not have and quietly makes you responsible for their security updates.
 
@@ -38,5 +38,5 @@ A script that follows all six is readable in about a minute. Reading it is encou
 - Keep it to one job. A tool that both transcribes and edits is two tools.
 - No network calls unless the tool's entire purpose is a network call, and then say so in the first line of the README.
 - Fail with the fix in the message. `whisper-cli not installed. Run: brew install whisper-cpp` beats a stack trace.
-- **If it writes to a directory the user chose, test that it leaves the rest of that directory alone.** Not a required file, but the strongest single thing you can add. `video-frames/test_extract.py` is the worked example: no test framework to install (just `unittest`, though it does need the tool's own dependencies since it exercises the real thing), fixtures generated at run time so nothing binary is committed, and biased toward asserting what must *not* have happened — a planted file still byte-for-byte identical, a refused command having written nothing. Every bug that suite exists for passed a happy-path test first.
+- **If it writes to a directory the user chose, test that it leaves the rest of that directory alone.** Not a required file, but the strongest single thing you can add. `video-frames/test_extract.py` is the worked example: no test framework to install (just `unittest`, though it does need the tool's own dependencies since it exercises the real thing), fixtures generated at run time so nothing binary is committed, and biased toward asserting what must *not* have happened: a planted file still byte-for-byte identical, a refused command having written nothing. Every bug that suite exists for passed a happy-path test first.
 - Sanitise before it lands here: no absolute paths, no employer-specific names, no internal links. See `skills/sanitize-for-sharing/` if you have it.

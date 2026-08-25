@@ -1,11 +1,11 @@
-# Glossary template — copy this to <your-project>.txt and fill it in.
+# Glossary template: copy this to <your-project>.txt and fill it in.
 #
 #   cp _template.txt my-project.txt
 #   tools/transcription/transcribe.sh recording.mov my-project
 #
 # WHY THIS EXISTS
 # Whisper mis-hears names it has never encountered. Left alone it will turn a
-# product name into the nearest ordinary English words — two real misses from a
+# product name into the nearest ordinary English words. Two real misses from a
 # product walkthrough: "Smooth Matte" became "smooth Mac", "dual price" became
 # "jewel price". Listing the right spellings here primes it before it guesses.
 #

@@ -1,14 +1,14 @@
 # macOS
 .DS_Store
 
-# Model weights and other large binaries are never committed — they are
+# Model weights and other large binaries are never committed. They are
 # downloaded by a command you can read. A multi-gigabyte file in version
 # control makes every clone slow forever.
 *.bin
 *.gguf
 *.pt
 
-# Local agent state — never publishable. settings.local.json carries machine
+# Local agent state, never publishable. settings.local.json carries machine
 # paths and permission grants, and worktrees/ accumulates stale agent copies of
 # the whole repo. Untracked was not enough: one `git add -A` would sweep them in.
 .claude/
@@ -19,6 +19,6 @@ __pycache__/
 .venv/
 venv/
 
-# Worked-example artefacts — regenerate with skills/video-review/example/make-example.sh
+# Worked-example artefacts: regenerate with skills/video-review/example/make-example.sh
 skills/video-review/example/*.mp4
 skills/video-review/example/*-frames/
