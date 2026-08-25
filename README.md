@@ -111,6 +111,7 @@ Large files (model weights in particular) are **never committed here**. They are
 
 | Method | What it is |
 |---|---|
+| [three-gates-and-a-lock](methods/three-gates-and-a-lock/) | How to approve work you can't personally re-derive: semantic, then independent QA that can't write the approval, then the mechanical lock. Plus the half people leave out, which is that approved has to mean frozen |
 | [triangulate-load-bearing-facts](methods/triangulate-load-bearing-facts/) | One rule for the failure where an assistant grabs a number, treats it as settled, and builds on it. When to spend two minutes checking, and what "independent" actually means |
 | [what-meeting-transcripts-get-wrong](methods/what-meeting-transcripts-get-wrong/) | Four things AI note-takers get wrong often enough to plan around, from a few hundred transcripts. Nothing to install |
 
