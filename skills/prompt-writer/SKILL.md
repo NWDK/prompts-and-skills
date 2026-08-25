@@ -126,18 +126,46 @@ These are the three prompts most frequently needed. Apply the relevant design no
 
 ### Session Handoff / Fresh-Context Brief
 
-Used when wrapping up a session and spinning up a new agent to continue work in a clean context window.
+Wrapping up a session and starting a new agent in a clean context window.
+Also a contractor handoff, a ticket, or a note to whoever opens the project
+cold in three months, including you.
 
-Key elements to include:
-- Current state: what is done, what is outstanding, any decisions made this session
-- Target scope: what the new agent should work on (full project, subtask, or specific question)
-- Essential context: relevant file paths, constraints, conventions, or decisions the new agent must know
-- Kickoff instruction: what to do first
+**The test the draft has to pass: could a cold stranger act on this without
+asking anything or looking anything up?** If not, it is not finished. Every
+unstated resource becomes a search, a wrong turn, or a stale assumption,
+and with an agent it becomes those silently and fast.
+
+Key elements:
+- **Current verified state.** What is true right now, checked against the
+  system rather than recalled. What exists, what is already done, what is
+  known-broken.
+- **Context the receiver does not have.** Why this exists, what it connects
+  to, what a newcomer would misread. Write for zero shared history.
+- **Exact resources.** Full paths, complete URLs, exact IDs and account
+  names. Not "the config", not "the usual folder", not "the dashboard".
+- **Scope fence.** What to do, and what not to touch. For delegated work,
+  name the evidence that proves the untouched thing stayed untouched.
+- **Done means.** The deliverable, its format, where it goes, and what
+  proof comes with it. Defined as artefacts, never as the worker's say-so.
 
 Design notes:
-- Keep it tight: a handoff that tells the agent to read every session note defeats the purpose
-- Use `<current_state>`, `<outstanding_work>`, `<context>`, `<your_task>` XML tags
-- Ask before drafting: full project handoff or scoped subtask? These need different levels of context
+- **If you know it, or could look it up in thirty seconds, put it in.**
+  "Find the repo URL yourself" saves the sender thirty seconds and costs
+  every receiver twenty minutes, forever.
+- **Verify each state claim before sending.** The expensive defect is not a
+  missing fact, it is a confidently wrong one. A brief once asserted four
+  items were adopted when eleven were on disk, and the receiving session's
+  conclusions inherited the wrong count.
+- **Names beat descriptions.** Descriptions drift, names do not.
+- **Instructions are not controls.** "Do not touch X" without "prove X is
+  untouched" is a hope.
+- Keep it tight anyway: a handoff that says to read every session note
+  defeats the purpose.
+- Tags like `<current_state>`, `<outstanding_work>`, `<context>` and
+  `<your_task>` help here specifically, because the receiver needs to
+  locate sections rather than read prose end to end.
+- Ask first: full project handoff or scoped subtask? Different amounts of
+  context.
 
 ### Deep Research Prompt
 

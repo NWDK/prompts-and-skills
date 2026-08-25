@@ -80,6 +80,27 @@ request is cargo cult.
 
 The repo README tells a reader that every skill states its limits near the top, and that a missing one is an oversight rather than a decision. That was a promise the collection was not keeping. This skill now carries five.
 
+### The self-contained brief got folded in, not published beside it
+
+I had a separate template written up: the cold-stranger test, exact
+resources, verified state, a scope fence. It was queued as its own piece.
+
+Publishing it would have put two things in one repo answering one question,
+since this skill already had a Session Handoff pattern covering the same
+ground. Two documents on one subject drift apart, and the reader inherits
+the argument.
+
+So the handoff pattern absorbed what it was missing: the test itself, the
+requirement that state claims be checked rather than recalled, the
+insistence on exact names over descriptions, and the rule that a scope
+fence without an evidence requirement is a hope rather than a control. The
+thirty-second rule came with it, because it is the one that gets argued
+with: "find the repo URL yourself" saves the sender thirty seconds and
+costs every receiver twenty minutes, forever.
+
+The handoff section is now the longest of the three patterns. That is
+correct. It is the one where the prompt is genuinely all the receiver gets.
+
 ## Rejected
 
 - **Naming models.** See above. Rejected permanently, not pending a better list.

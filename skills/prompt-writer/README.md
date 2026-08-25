@@ -59,6 +59,10 @@ sub-agent brief.
 `SKILL.md` has three worked patterns for the cases above: session handoff,
 deep research, and kickoff. Those are the parts to read.
 
+The handoff one carries the test worth stealing even if you ignore the rest:
+could a cold stranger act on this without asking anything or looking
+anything up?
+
 [`DECISIONS.md`](DECISIONS.md) is what got chosen and rejected, including
 the capability claim that was wrong a month after I wrote it, which is why
 this names no model versions.
