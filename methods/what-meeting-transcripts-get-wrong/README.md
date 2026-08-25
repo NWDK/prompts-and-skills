@@ -4,94 +4,71 @@ I've run a few hundred meeting transcripts through a triage pipeline over
 about two years, mostly Gemini's Meet exports. Four things go wrong often
 enough to plan around. None of them throw an error, which is the problem.
 
-If you take one thing: the summary block at the top is a hint, not a record.
-
 ## 1. The summary block misses real asks
 
-Every note-taker writes its own summary and action-item block. Read it as a
-starting point and then re-scan the body yourself, because things said as
-asks don't reliably make it up there. It also merges two distinct asks into
-one bullet, which reads as tidier and loses one of them.
+Read the note-taker's own summary as a starting point, then re-scan the
+body yourself. Things said as asks don't reliably make it up there, and it
+merges two distinct asks into one bullet, which reads tidier and loses one
+of them.
 
-**How I know:** noticed consistently across Gemini Meet exports over about
-two years. I have never counted it, and my working impression of "a fifth
-to a half of them" is an impression, not a measurement. The direction is
-solid, the number isn't mine to give you. If you're relying on your
-note-taker's summary today, the cheap test is to re-scan one body by hand
-and see what you find.
+The cost is an item someone was assigned in the meeting that nobody wrote
+down.
 
-**What it costs:** the missed item was assigned to someone in the meeting
-and nobody has it written down.
+Noticed over two years of Gemini exports, never counted. If you want a
+number for your own note-taker, re-scan one body by hand.
 
 ## 2. Transcribers duplicate whole blocks
 
-Auto-transcribers emit the same words twice, in consecutive blocks, seconds
-apart. It's an artifact of how the caption stream gets chunked, not
-something anyone said twice.
+The same words, twice, in consecutive blocks seconds apart. It's how the
+caption stream gets chunked, not something anyone said twice.
 
-Stripping it is easy to describe and easy to get wrong. The rule that
-catches it, same words plus consecutive plus seconds apart, is exactly the
-shape of a person repeating back what was just said to confirm it. Which
-happens constantly in meetings, and is often the moment a decision got
-made.
-
-**What to do:** strip it, but flag rather than delete when the repetition
-could be real, and re-read the cleaned copy after any meeting where people
-talked over each other.
+Easy to strip and easy to get wrong. Same words, consecutive, seconds
+apart is also exactly what a person repeating something back to confirm it
+looks like, and that's often the moment a decision got made. Flag rather
+than delete when it could be real, and re-read the cleaned copy after any
+meeting where people talked over each other.
 
 ## 3. Attribution is inherited, and it's confident
 
 Whatever the transcriber decided about who was speaking, everything
-downstream inherits. If it labels two people as one speaker, or collapses
-everyone into "Speaker 1", your action items get assigned to a confidently
-named wrong person.
+downstream inherits. Two people labelled as one, or everyone collapsed into
+"Speaker 1", and your action items get assigned to a confidently named
+wrong person.
 
-This one is worse than a gap because it produces a plausible artifact. A
-missing item looks missing. A misattributed one looks finished.
-
-**What to do:** check the speaker map before you trust any assignment,
-especially on calls with more than three people or where someone joined
-late.
+Worse than a gap, because a missing item looks missing and a misattributed
+one looks finished. Check the speaker map before trusting any assignment,
+especially with more than three people or someone who joined late.
 
 ## 4. You can prime some transcribers and not others
 
-Whisper mis-hears names it has never seen, and turns them into the nearest
+Whisper mis-hears names it has never seen and turns them into the nearest
 ordinary English. "Smooth Matte" became "smooth Mac". "Dual price" became
-"jewel price". Running it yourself, you can hand it a glossary up front and
-it stops guessing.
+"jewel price". Running it yourself, you hand it a glossary up front and it
+stops guessing.
 
-You can't do that with a hosted note-taker. It has already decided by the
-time you see the file, so the same problem needs a corrections pass on the
-way out instead of a priming pass on the way in.
-
-Same failure, two different fixes, and which one you get depends on where
-the transcription happened. Worth knowing before you build the wrong one.
+A hosted note-taker has already decided by the time you see the file. Same
+failure, opposite fix: prime on the way in, or correct on the way out,
+depending on whether you own the transcription step.
 
 ## The practice underneath all four
 
-Propose before you file. Every one of these is a quiet wrong answer rather
-than an error, so the only thing that reliably catches them is a human
-reading the proposed output against their own memory of the meeting, while
-that memory still exists. Do it the same day.
+Propose before you file, and do it the same day. These are quiet wrong
+answers rather than errors, so the only thing that catches them is a person
+reading the output against their own memory of the meeting while that
+memory still exists.
 
-That's also the honest limit of any pipeline built on this. There's no
-ground truth to check against. You are the check.
+There's no ground truth here. You are the check.
 
 ## What I'm not shipping you
 
-I have a filing pipeline built on top of this: routing to per-project
-notes, a punch list, a per-meeting-type config carrying speaker maps and
-extraction rules. It's genuinely useful to me and it would be a bad gift.
-It needs a config written before it runs at all, it assumes one export
-shape, and it never marks anything done, so its carry-over list only grows
-until you prune it by hand.
-
-The findings above are the part that transfers. The machinery is shaped by
-my projects, not yours.
+There's a filing pipeline under this: routing to per-project notes, a punch
+list, a config per meeting type carrying speaker maps and extraction rules.
+Useful to me, and it would be a bad gift. It needs that config written
+before it runs at all, assumes one export shape, and never marks anything
+done, so its carry-over list grows until you prune it by hand.
 
 ## Feedback
 
-If your note-taker fails differently, I'd like to know:
+If your note-taker fails differently I'd like to know:
 [open an issue](../../issues). Four findings from mostly one tool is a
-narrow base, and the scoping in finding 1 is exactly the kind of thing
-someone else's experience would sharpen.
+narrow base.
