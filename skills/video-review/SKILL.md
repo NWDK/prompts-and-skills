@@ -125,7 +125,7 @@ python3 "$VF/extract.py" probe "$VIDEO"
 
 Writes nothing. Prints the frame budget and the token ceiling for all three effort tiers. **Show this to whoever asked before continuing on anything over a few minutes**. The cost is theirs to accept, not yours to assume. A 17-minute recording runs around 135k visual tokens at `average`.
 
-> **The frame count is the provider-neutral number; the token figure is Claude's arithmetic** (28x28 patches). On another provider the frames and dimensions are identical and only the token conversion differs, so treat the estimate as "how much visual context this will cost" rather than a billing figure.
+> **The frame count is the provider-neutral number; the token figure is Claude's arithmetic.** On another provider the frames and dimensions are identical and only the token conversion differs, so treat the estimate as "how much visual context this will cost" rather than a billing figure. The formula, the resolution tiers and the request limits are in [COMPATIBILITY.md](COMPATIBILITY.md), dated.
 
 For a long recording, offer working section by section with `--start`/`--end` instead of ingesting the whole thing at once.
 

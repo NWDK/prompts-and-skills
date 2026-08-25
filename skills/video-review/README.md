@@ -6,6 +6,25 @@ This is a **video-to-document skill**: it transcribes locally, picks the moments
 
 There's [a worked example](example/) with [the report it produces](example/report.md), if you'd rather look before installing anything. 24 seconds of video, three cues, two images, four honestly declared gaps.
 
+## Get to a first run
+
+1. Copy this folder into your `skills/`, plus [`tools/transcription/`](../../tools/transcription/) and [`tools/video-frames/`](../../tools/video-frames/), which this one drives.
+2. Follow [`tools/transcription/SETUP.md`](../../tools/transcription/SETUP.md). Three installs and one model download; it covers both tools.
+3. Point your agent at the tools, once:
+
+```bash
+export VF=/absolute/path/to/tools/video-frames
+export TR=/absolute/path/to/tools/transcription
+python3 "$VF/extract.py" probe recording.mov
+```
+
+`probe` writes nothing. It prints the frame budget and what the run will cost, which is the gate before anything is spent.
+
+4. Then say "review this video" or type `/video-review`.
+
+The rest of this page is what to expect, what it costs, and what leaves your
+machine. [Tools it needs](#tools-it-needs) has the detail on step 1.
+
 ## Known limits
 
 - **Local video files only.** No URL or hosted-video ingest, deliberately. See [DECISIONS.md](DECISIONS.md) for the reasoning and the trigger that would change it.

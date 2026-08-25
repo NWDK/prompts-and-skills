@@ -51,7 +51,8 @@ except ImportError:
 # is a function of output pixels, not file size. Everything else in this file --
 # frame selection, budgets, deduplication -- is provider-neutral; this constant
 # and DEFAULT_LONG_EDGE below are the only two places a different vision API
-# would need different numbers. See this tool's docs for the verified limits.
+# would need different numbers. Verified limits and their check date live in
+# skills/video-review/COMPATIBILITY.md.
 PATCH = 28
 
 # PROVIDER-SPECIFIC (Claude), and the only other one.

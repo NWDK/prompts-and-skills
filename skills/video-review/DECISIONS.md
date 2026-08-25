@@ -235,9 +235,10 @@ Also deliberately absent: any cloud transcription path (section 1), video genera
 
 ## API facts this relies on
 
-Verified live against the vision documentation on 2026-08-11. Re-check before assuming they still hold.
+The numbers themselves live in [COMPATIBILITY.md](COMPATIBILITY.md) with the date they were checked, so they can be seen to go stale rather than quietly going wrong here.
 
-- Image cost is `ceil(width / 28) x ceil(height / 28)` tokens. It follows output pixels, not file size.
-- 1568px on the long edge is the standard-resolution tier's native maximum. A 16:9 frame lands near 1,560 tokens with no downscaling penalty, which is why it is the default rather than the 2000px ceiling.
-- Above 20 images in a single request, a stricter per-image dimension cap applies and oversized images are rejected outright. This tool routinely exceeds 20 images, so the resolution ceiling is a default rather than an option.
-- Limits at the time of checking: 600 images per request on 1M-context models, a 32 MB request ceiling (usually hit before the image count is), and 8000x8000px / 10 MB per image.
+What they decided:
+
+- **The default long edge is the tier's native maximum, not the highest allowed value.** A frame at the native maximum costs nothing extra in downscaling, and going higher buys detail you pay about three times over for.
+- **The resolution ceiling is a default rather than an option**, because this tool routinely puts more than 20 images in a request, and above 20 the API applies a stricter per-image dimension cap.
+- **Cost follows output pixels, not file size**, which is why compression changes the bill not at all and resolution changes it a lot.
