@@ -111,6 +111,7 @@ Large files (model weights in particular) are **never committed here**. They are
 
 | Method | What it is |
 |---|---|
+| [triangulate-load-bearing-facts](methods/triangulate-load-bearing-facts/) | One rule for the failure where an assistant grabs a number, treats it as settled, and builds on it. When to spend two minutes checking, and what "independent" actually means |
 | [what-meeting-transcripts-get-wrong](methods/what-meeting-transcripts-get-wrong/) | Four things AI note-takers get wrong often enough to plan around, from a few hundred transcripts. Nothing to install |
 
 ## Licence
