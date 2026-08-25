@@ -90,6 +90,7 @@ Large files (model weights in particular) are **never committed here**. They are
 | Skill | What it does | Needs a tool? |
 |---|---|---|
 | [oss-check](skills/oss-check/) | Decide whether to adopt, vendor, steal from, park or skip an external repo, package, skill or MCP server, by reading the source, not the README. Adapted from a method by [@Ben-Eulogize](https://github.com/Ben-Eulogize) | No (needs `gh`) |
+| [sanitize-for-sharing](skills/sanitize-for-sharing/) | Strip private context out of a file before it goes public. Ships a planted fixture showing what it catches, what it leaves, and the credential it misses | No |
 | [prompt-writer](skills/prompt-writer/) | Write a prompt for the cases where there is no second turn to correct course: a handoff into a fresh context, a sub-agent brief, an unattended run, deep research. Opens by telling you when you don't need one | No |
 | [video-review](skills/video-review/) | Turn a local screen recording into a cited written document (defect log, runbook, or footage notes) where every claim traces to a timestamp and a frame. **[Worked example](skills/video-review/example/report.md)** | Yes: [transcription](tools/transcription/) and [video-frames](tools/video-frames/) |
 
