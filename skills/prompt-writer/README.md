@@ -1,45 +1,70 @@
 # Prompt Writer
 
-Turns messy natural-language requests into structured, copy-pasteable prompts for Claude or other models.
+Designs a prompt instead of answering the question. Paste it a messy ask
+and you get a prompt back, not a result.
 
-This is a **prompt-design skill**: it designs prompts, it does not execute the underlying task.
+## Read this first, it might talk you out of it
+
+Most of what got called prompt engineering has stopped paying. Current
+models do better with a goal and the constraints than with a script, and a
+prompt written prescriptively for an older model measurably lowers the
+output quality of a newer one. If you're in a conversation and can see what
+comes back, ask for the thing and correct it. That beats any prompt this
+would write for you.
+
+What still pays is the case where correcting it isn't available, because
+the prompt has to carry everything:
+
+- **Handing off to a fresh context.** A new session, a worktree, a new
+  window after a long one ended.
+- **Briefing a sub-agent.** It starts from your prompt and little else.
+- **Unattended or one-shot runs.** Overnight, batched, scheduled. No second
+  turn to correct course.
+- **Deep research.** The shape of the question decides the shape of what
+  comes back, and you don't see the middle.
+
+That's where I use it now. If your case isn't one of those four, you
+probably don't need this.
+
+There's a fifth, and it's about you rather than the model: if you're newer
+to this and want a tighter leash while you get a feel for what these models
+do unprompted, start structured and loosen it. The skill's executor table
+is the part to loosen first.
 
 ## Known limits
 
-- **It will not do the task.** Paste a question while this skill is active and you get a better-worded question back, not an answer. That is the core rule working, not a bug. But if you wanted the answer, say so and drop the skill.
-- **Nothing it writes is tested.** There is no eval loop, and by its own core rule the skill cannot run a prompt to find out whether it works. "Good" here means well-structured, not measured. Budget a round of real use before trusting a prompt with anything that matters.
-- **It stops at the prompt boundary.** For agentic prompts it will tell you when the real problem is the context the model can see rather than the wording, and then stop. Flagging that is in scope; designing the system around it is explicitly not.
-- **It is Claude-shaped by default.** The XML-tag pattern is recommended because Claude is trained on it. Prompts aimed at other models come out in the same shape, which is usually harmless but is not tuned for them.
-- **It names no model versions, which means it cannot tell you what yours does.** The reasoning guidance is deliberately written to outlast individual releases, so it stops short of specifics: whether your model exposes an effort setting, what its levels are called, and whether thinking is on by default are all things you have to check against current documentation. The trade is intentional (a version list in a skill file goes stale within weeks) but the last step is yours.
+It won't do the task. Paste a question while this is active and you get a
+better-worded question back. If you wanted the answer, say so and drop the
+skill.
 
-## What it handles
+Nothing it writes is tested. There's no eval loop, and by its own core rule
+it can't run a prompt to find out whether it works. "Good" here means
+well-structured, not measured.
 
-- Writing a prompt from scratch from a vague or short ask
-- Refining an existing prompt
-- Designing a multi-step or agentic prompt workflow
-- Writing a session handoff brief for a fresh context window
-- Structuring a deep research prompt from a rough rationale
-- Writing a kickoff prompt for a new build or creative task
+It stops at the prompt boundary. For agentic prompts it will tell you when
+the real problem is the context the model can see rather than the wording,
+and then stop.
 
-## How to invoke it
+It names no model versions, deliberately. Thinking defaults, effort ranges
+and parameter names have all moved in the last few releases, so anything
+specific here would be wrong by the time you read it. Where it matters,
+check your model's current docs.
 
-Type `/prompt-writer` in your Claude Code session, or describe what you want and Claude will recognise the trigger phrases:
+## Use it
 
-- "write me a prompt"
-- "improve this prompt"
-- "refine this prompt"
-- "write me a handoff prompt"
-- "write me a research prompt"
-- "I want to kick this off"
+Copy the folder into your `skills/`, or paste `SKILL.md` into a project's
+custom instructions. Then ask for a handoff prompt, a research prompt, or a
+sub-agent brief.
 
-## Key behaviours
+`SKILL.md` has three worked patterns for the cases above: session handoff,
+deep research, and kickoff. Those are the parts to read.
 
-- For simple requests: produces a prompt directly, minimal clarification
-- For complex or agentic requests: asks the minimum questions needed before drafting
-- Uses XML tag structure for Claude prompts (structured-tier and above)
-- Does not add chain-of-thought scaffolding for models with extended thinking
-- Recommends few-shot examples for any format-sensitive output
+[`DECISIONS.md`](DECISIONS.md) is what got chosen and rejected, including
+the capability claim that was wrong a month after I wrote it, which is why
+this names no model versions.
 
-## Customise for your context
+## Customise it
 
-The `SKILL.md` includes a **Company/Product Guidance** section near the bottom. Fill this in with your own product terminology, roles, and workflows so the skill produces prompts that fit your context rather than generic ones.
+There's a **Company / Product Guidance** section near the bottom of
+`SKILL.md`. Fill it in with your own terminology, roles and workflows, or
+the prompts come out generic.

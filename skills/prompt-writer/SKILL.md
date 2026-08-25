@@ -1,21 +1,40 @@
 ---
 name: prompt-writer
-description: Design or refine prompts without executing the underlying task. Use when the user wants a prompt written from a messy request, an existing prompt improved, a multi-step prompt or agent workflow structured, or a session handoff brief written for a fresh context window.
+description: Design or refine a prompt without executing the underlying task. Use when the user asks to write or improve a prompt, or wants a brief for a case where there is no second turn to correct course: a handoff into a fresh context or worktree, a sub-agent brief, an unattended or one-shot run, or a deep-research prompt. Also use it to tell them when they do not need a prompt at all.
 ---
 
 # Prompt Writer
 
-## Purpose
+## When this is worth doing, and when it isn't
 
-Use this skill when the user wants to:
+Most of what got called prompt engineering has stopped paying. Current
+models do better with a goal and the constraints than with a script, and a
+prompt written prescriptively for an older model measurably lowers output
+quality on a newer one. If the user is in a conversation and can see the
+output, the fastest path is to ask for the thing and correct it. Say so
+rather than producing a prompt they did not need.
 
-- create a prompt from a messy or short request
-- improve an existing prompt
-- design a prompt workflow or agent setup
-- turn an idea into a copy-pasteable prompt for another model or tool
-- write a session handoff or fresh-context brief for a new agent
+What still pays is the case where correcting it is not available: the
+prompt has to carry everything, because there is no second turn or nobody
+is watching.
 
-This skill is not for executing the underlying task itself.
+Use this skill for:
+
+- **a handoff to a fresh context.** A new session, a worktree, a new window
+  after a long one ended.
+- **a sub-agent brief.** Spawned work that starts from the prompt and
+  little else.
+- **an unattended or one-shot run.** Overnight, batched, scheduled.
+- **deep research.** The shape of the question determines the shape of what
+  comes back, and the intermediate steps are not reviewed.
+
+There is a fifth case, and it is about the person rather than the model.
+Someone newer to this may want a tighter leash while they build a feel for
+what these models do unprompted. That is reasonable. Give them the
+structure, and say which parts they can drop once they trust it. The
+executor table below is where to loosen first.
+
+Not for executing the underlying task.
 
 ## Core Rule
 
@@ -30,19 +49,9 @@ Only return:
 
 ## Operating Modes
 
-Classify each request into one of these four modes:
-
-1. `write-from-scratch`
-   The user gives a vague, short, or messy natural-language ask.
-
-2. `refine-existing-prompt`
-   The user pastes a draft prompt and wants it improved.
-
-3. `design-workflow-or-agent`
-   The user wants a multi-step, tool-using, or agentic prompt setup.
-
-4. `handoff-or-context-brief`
-   The user wants a fresh-context prompt for a new agent session, either to hand off a current project or to kick off a subtask in a clean context window.
+Classify the request: writing one from scratch, refining a draft the user
+pasted, designing a multi-step or agentic setup, or writing a handoff into
+a fresh context. The last two are where this skill earns its keep.
 
 ## Complexity Tiers
 
@@ -63,7 +72,7 @@ Complexity describes the task. This describes who runs it. The two are independe
 |---|---|
 | **Frontier model, interactive** (you see the output and can iterate) | Goal, constraints, definition of done. No step-by-step scripts. Prompts written prescriptively for older models measurably reduce output quality on current frontier models; the model's own plan is usually better than a hand-written one. |
 | **Frontier model, one-shot or unattended** (overnight run, batch job, scheduled agent) | Same shape, plus explicit stop conditions, exclusions, and what "done" means. There is no second turn to correct course, so close the exits rather than scripting the route. |
-| **Sub-agent** (spawned into a fresh context by an orchestrator) | Explicit to the point of feeling redundant. It shares none of your context, cannot ask a clarifying question, and will not generalise an instruction you gave for only one case. Every path, input, constraint, and output shape goes in the prompt. |
+| **Sub-agent** (spawned into a fresh context by an orchestrator) | Explicit to the point of feeling redundant. It starts from your prompt and little else, and will not generalise an instruction you gave for only one case. Every path, input, constraint, and output shape goes in the prompt. **Whether it can come back and ask depends on the harness**: some can be messaged mid-run, most cannot. Check yours, and where it cannot, write as though the prompt is your only turn. |
 | **External system** (another vendor's model, or a hosted research or agent product) | Point precisely: one pointed question, sources to prefer or avoid, the output shape you want back, and how to handle uncertainty. One shot, and no visibility into what it did. |
 
 The failure modes sit at opposite ends of the same axis. Over-specifying a frontier model costs you quality; under-specifying a sub-agent or an external system costs you the run.
@@ -79,7 +88,11 @@ When the executor is unstated and the tier is Structured or above, ask. It is th
 
 ## Prompt Design Pattern
 
-Use this pattern internally when drafting. Wrap sections in XML tags for any structured-tier prompt or above. Claude is trained on this structure and responds measurably better to it than plain paragraphs.
+Use this pattern internally when drafting. Tags earn their place when a
+prompt is long enough that a section needs referring to later, or when
+something other than a person will parse it. They are not a performance
+trick, and a short prompt does not need them: current models read plain
+prose fine, and tagging a three-line request is cargo cult.
 
 ```
 <role>...</role>
@@ -176,7 +189,7 @@ When writing an orchestrator prompt, the prompt must include criteria for sub-ag
 
 Two things matter more than that list, and are the usual reason delegation goes wrong:
 
-- **The sub-agent starts blind and cannot ask.** It shares none of the orchestrator's context, conversation, or working assumptions, and has no way to raise a clarifying question. Ambiguity a person would resolve in one exchange becomes a silent wrong turn instead. Everything it needs goes in its prompt. This is the one place where more explicit is reliably better.
+- **The sub-agent starts blind, and usually cannot ask.** It does not share the orchestrator's context, conversation, or working assumptions. Some harnesses can message a running sub-agent; most cannot, and none of them make it easy. Assume ambiguity a person would resolve in one exchange becomes a silent wrong turn instead, and put everything it needs in its prompt. This is the one place where more explicit is reliably better.
 - **Current models over-delegate, so orchestrator prompts usually need a ceiling rather than encouragement.** Every sub-agent re-establishes context, re-explores, reports back, and the orchestrator then re-reads the report; that overhead is real and it repeats. Write the prompt to delegate only where the work is genuinely independent and sizeable, to keep spawn counts low, and to commit to a sub-agent's findings rather than re-deriving them. Verification belongs in the orchestrator's own loop, not in a spawned checker.
 
 If your workspace has multi-agent conventions, reference them here rather than re-documenting them in the prompt itself.
@@ -208,38 +221,6 @@ Example entries:
 - "Our product is called [X]. Key objects are [Y] and [Z]."
 - "Default audience is [role]. Tone should be [description]."
 - "Flag any assumptions about internal systems outside the prompt block."
-
-## Prompt-Drafting Checklist
-
-Use this mentally unless the user explicitly asks to see it:
-
-- role or persona only when it adds value
-- scenario or background
-- explicit user goal
-- inputs and their source
-- output requirements
-- examples (default on for format-sensitive or structured-tier outputs)
-- XML structure (default on for structured-tier and above)
-- validation instructions only where there is something concrete to check against, never reasoning scaffolding
-- stop conditions and exclusions
-- executor class, and effort level where the target exposes one
-- destination input limit, if the prompt is going somewhere that truncates
-- sub-agent spawn criteria and a delegation ceiling if orchestrator prompt
-
-## Shortcut Triggers
-
-Use this skill when the user says things like:
-
-- `write me a prompt`
-- `improve this prompt`
-- `refine this prompt`
-- `turn this into a better prompt`
-- `design the prompt workflow`
-- `build the agent prompt`
-- `write me a handoff prompt`
-- `write a fresh context brief`
-- `write me a research prompt`
-- `I want to kick this off`
 
 ## What Not To Do
 
