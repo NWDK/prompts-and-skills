@@ -53,11 +53,11 @@ A realistic ending looks like this:
 
 Note what that is not. It is not "looks solid, 4/5". A verdict you cannot act on is a vibe with a number attached.
 
-## The bit that surprises people
+## What the verdicts usually come out as
 
 **Expect STEAL-THE-PATTERN to be the normal answer, and ADOPT to be rare.** That feels like failure the first few times. It is not. Reading someone's source and taking the two ideas that matter costs an hour and leaves you owning your own code. Adopting costs an hour too, and leaves you owning a dependency, its abandonment risk, and its licence.
 
-The corollary is the part worth internalising: **a young domain caps the verdict, it never cancels the search.** "Nothing here is worth depending on" and "nothing here is worth reading" are completely different findings, and only the first one is usually true.
+The corollary: **a young domain caps the verdict, it never cancels the search.** "Nothing here is worth depending on" and "nothing here is worth reading" are completely different findings, and only the first one is usually true.
 
 ## Origin
 

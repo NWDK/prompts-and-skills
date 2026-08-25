@@ -6,8 +6,6 @@ This is a **transcript-triage skill**: it disentangles cross-project meeting cha
 
 ## Known limits
 
-Read these before deciding whether this fits, not after.
-
 - **It does not run out of the box.** There is no working default variant, only a template. Pre-flight halts when `variants/<variant>.md` is missing, so writing one is the first job. Budget that before your first transcript rather than during it.
 - **It expects a note-taker's export, not a raw transcript.** The pipeline assumes the shape those tools emit: a summary block, a decisions block, a timestamped body. A bare caption dump, or a tool whose export you have not taught it, halts at pre-flight by design.
 - **Missed action items fail silently.** The skill treats the transcriber's own summary as incomplete and tells you to re-scan the body, but nothing checks the re-scan, and there is no ground truth to check it against. The failure mode is a quiet omission, not an error. Read the routing proposal against your own memory of the meeting.

@@ -4,11 +4,9 @@ Turns a local screen recording into a cited written document (a defect log, a ru
 
 This is a **video-to-document skill**: it transcribes locally, picks the moments worth seeing, extracts only those frames, and writes the document. It does not edit or assemble video.
 
-**See it before you install anything: [a complete worked example](example/), including [the report it produces](example/report.md).** 24 seconds of video, three cues, two images, four honestly declared gaps.
+There's [a worked example](example/) with [the report it produces](example/report.md), if you'd rather look before installing anything. 24 seconds of video, three cues, two images, four honestly declared gaps.
 
 ## Known limits
-
-Read these before deciding whether this fits, not after.
 
 - **Local video files only.** No URL or hosted-video ingest, deliberately. See [DECISIONS.md](DECISIONS.md) for the reasoning and the trigger that would change it.
 - **It costs real tokens, and the cost scales with the recording.** A 17-minute walkthrough runs around 135k visual tokens at default effort. The first step prints the estimate before anything is spent, and it is a genuine gate. Do not skip past it on someone else's behalf.

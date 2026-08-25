@@ -34,9 +34,6 @@ through.
 Clause six tells it to challenge you, so sometimes it'll challenge you and
 be wrong.
 
-All my accounts already run these rules, so I've never tested the cold
-paste. It works for me.
-
 ## The two files
 
 [`SHORT-VERSION.md`](SHORT-VERSION.md) is what you paste.
