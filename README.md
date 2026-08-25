@@ -48,11 +48,8 @@ Where a tool has documented guarantees, those guarantees are also tests: `python
 skills/     the playbooks: what Claude should do, and what it should refuse to do
 tools/      the local programs some skills drive (ffmpeg wrappers, extractors)
 templates/  standing text you paste into a settings field once, then forget
+methods/    write-ups where the value is the reasoning, not a file you install
 ```
-
-`methods/` will appear when the first one lands. It is for write-ups of how
-something was done, where the value is the reasoning rather than a file you
-install.
 
 **Most skills are just a `SKILL.md`.** Copy the folder, you are done. A few drive a real program, and those live in `tools/` rather than inside the skill, so that two skills needing the same tool do not each carry a copy that drifts.
 
@@ -94,7 +91,6 @@ Large files (model weights in particular) are **never committed here**. They are
 |---|---|---|
 | [oss-check](skills/oss-check/) | Decide whether to adopt, vendor, steal from, park or skip an external repo, package, skill or MCP server, by reading the source, not the README. Adapted from a method by [@Ben-Eulogize](https://github.com/Ben-Eulogize) | No (needs `gh`) |
 | [prompt-writer](skills/prompt-writer/) | Write a prompt for the cases where there is no second turn to correct course: a handoff into a fresh context, a sub-agent brief, an unattended run, deep research. Opens by telling you when you don't need one | No |
-| [meeting-notes](skills/meeting-notes/) | Turn an AI meeting transcript into filed action items, decisions, and a punch list; proposes routing before filing | No |
 | [video-review](skills/video-review/) | Turn a local screen recording into a cited written document (defect log, runbook, or footage notes) where every claim traces to a timestamp and a frame. **[Worked example](skills/video-review/example/report.md)** | Yes: [transcription](tools/transcription/) and [video-frames](tools/video-frames/) |
 
 ## Tools
@@ -109,6 +105,12 @@ Large files (model weights in particular) are **never committed here**. They are
 | Template | What it is | Setup |
 |---|---|---|
 | [working-agreement](templates/working-agreement/) | Twelve clauses that make an assistant say what it doesn't know, push back on weak plans, and ask before building. Paste into your custom instructions | One paste, about a minute |
+
+## Methods
+
+| Method | What it is |
+|---|---|
+| [what-meeting-transcripts-get-wrong](methods/what-meeting-transcripts-get-wrong/) | Four things AI note-takers get wrong often enough to plan around, from a few hundred transcripts. Nothing to install |
 
 ## Licence
 
