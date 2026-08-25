@@ -26,7 +26,7 @@ Be precise about the other half, though, because "inert until you type its name"
 
 Where a tool has documented guarantees, those guarantees are also tests: `python3 tools/video-frames/test_extract.py` needs no test framework installed, just `unittest` from the standard library, plus that tool's own ffmpeg and Pillow dependencies, since it exercises the real thing rather than a mock. CI runs it on Linux and macOS on every push. Several of those tests exist because the obvious approach was measurably wrong the first time.
 
-**What are the known limitations?** Each skill's README has a "Known limits" section near the top rather than buried at the bottom. If a limitation is missing there, it was an oversight rather than a decision.
+**What are the known limitations?** Every skill and template README has a "Known limits" section near the top rather than buried at the bottom. If a limitation is missing there, it was an oversight rather than a decision.
 
 **Should I trust the setup scripts?** Read them first. They are short and they only run commands you could type yourself. See [Installing dependencies](#installing-dependencies) below; the manual path is the primary one and the script is a convenience, never the only route.
 
@@ -35,9 +35,12 @@ Where a tool has documented guarantees, those guarantees are also tests: `python
 ```
 skills/     the playbooks: what Claude should do, and what it should refuse to do
 tools/      the local programs some skills drive (ffmpeg wrappers, extractors)
+templates/  standing text you paste into a settings field once, then forget
 ```
 
 **Most skills are just a `SKILL.md`.** Copy the folder, you are done. A few drive a real program, and those live in `tools/` rather than inside the skill, so that two skills needing the same tool do not each carry a copy that drifts.
+
+**A template is not a skill.** Skills get loaded when a kind of work starts and tell an agent how to approach it. Templates are standing text you put in place once. If you only want one thing from this repo and you do not have an agent workspace set up, start with a template.
 
 Every tool states what it depends on, where to get it, and what the alternatives are. **I don't bundle other people's software.** ffmpeg and Whisper aren't mine to ship, and a repo that vendors them is claiming authorship it does not have.
 
@@ -50,6 +53,8 @@ Every tool states what it depends on, where to get it, and what the alternatives
 5. Invoke with `/skill-name`.
 
 No workspace setup? Paste the `SKILL.md` contents straight into a Claude.ai Project as a custom instruction. The prose skills work fine that way; the tool-backed ones need the local programs.
+
+**Using a template** is simpler: open it, copy the block, paste it into the settings field its README names. Nothing to install and no workspace required.
 
 ## Installing dependencies
 
@@ -82,6 +87,12 @@ Large files (model weights in particular) are **never committed here**. They are
 |---|---|---|
 | [transcription](tools/transcription/) | Local audio-to-text with glossary priming, so product names spell correctly. No network path. | whisper.cpp, ffmpeg, a model file you download once |
 | [video-frames](tools/video-frames/) | Decides which frames of a video are worth paying for, and extracts them labelled with what was being said | ffmpeg, ffprobe, Pillow |
+
+## Templates
+
+| Template | What it is | Setup |
+|---|---|---|
+| [working-agreement](templates/working-agreement/) | Twelve clauses that make an assistant say what it doesn't know, push back on weak plans, and ask before building. Paste into your custom instructions | One paste, about a minute |
 
 ## Licence
 
