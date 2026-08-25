@@ -130,6 +130,22 @@ The README links to the block rather than reproducing it. One extra click
 against two copies drifting apart, which is the failure this piece warns
 about in the section above.
 
+## The claim I removed
+
+An earlier draft of the README promised what you'd notice in the first
+session: more "I don't know", more questions before drafts, at least one
+plan getting pushed on. All three happen to me. I cut them anyway.
+
+Every account I own already runs these rules, which means I've never
+actually used a naive assistant to test the path this README tells you to
+take. Paste it cold, nothing else supporting it, one settings box. The
+rules working inside my setup and the rules working as pasted text are two
+claims, and only the first one has anything behind it.
+
+So the README now says what I know instead of what I hope. If you run it
+cold and it does nothing, that's the finding I'm missing, and I'd rather
+have it in an issue than keep promising it.
+
 ## What I'd want pushed back on
 
 - **Is twelve too many?** Standing-instruction space is contested in some

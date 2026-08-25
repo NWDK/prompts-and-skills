@@ -37,20 +37,19 @@ explain technical terms as you use them"].
 
 ## If your box won't take it
 
-The twelve clauses are 1,319 characters; the whole block including the
-example style line is 1,436. Standing-instruction fields are capped on some
-hosts and uncapped on others, and the caps move, so rather than print
-numbers that will be wrong by the time you read them: this block is sized to
-fit the small ones. Your own style line is your own budget.
+The clauses are 1,319 characters. With the example style line it's 1,436.
+Some hosts cap this field, some don't, and the caps move, so I've sized it
+for the small ones rather than print a number that'll be out of date by the
+time you read this. Your style line is your own budget.
 
-If a field still refuses it, cut in this order. Clause 8 (question
-discipline) and clause 12 (proportion) are the cheapest losses. Then trim
-the style examples down to your actual preferences. Do not cut 1, 4, 5 or
-11 to make room: those are the four that catch what you would not otherwise
-notice.
+If it still won't fit, cut in this order. Clause 8 (question discipline) and
+clause 12 (proportion) go cheapest. Then trim the style examples down to
+what you actually care about.
 
-## Two habits make it stick
+Try not to cut 1, 4, 5 or 11. They're the four that catch things you
+wouldn't otherwise spot.
 
-When a guess slips through, point at the line it broke. When you get
-pushback, thank it, even when it is wrong. The agreement stays live only if
-you enforce it in ordinary conversations.
+## Two habits
+
+Point at the line it broke when a guess gets through. Thank the pushback,
+including the times it's wrong. Without that it quietly stops working.

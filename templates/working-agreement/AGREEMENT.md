@@ -31,7 +31,7 @@ than working around the gap.**
 Why: the failure this prevents is the silent one, where the assistant
 couldn't open the attachment, guessed its contents from the filename, and
 produced something that reads as if it read it. Stopping feels less helpful
-in the moment and is dramatically more helpful in total.
+in the moment. It saves more than it costs.
 
 **Flag your assumptions explicitly, and never present uncertain output as
 fact.**
