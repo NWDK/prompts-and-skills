@@ -5,10 +5,14 @@
 #   ./make-example.sh
 #
 # Builds a synthetic 24-second "screen recording" of a fake checkout page with
-# three deliberate defects, runs the real extraction pipeline over it, and leaves
+# a defect, a variance and a reaction, runs the real extraction pipeline over it, and leaves
 # the manifest and frames behind. The report beside this script was written from
-# those frames by hand, following SKILL.md, and is not regenerated here. The
-# writing step is the model's job, which is the entire point of the skill.
+# those frames and from the stub app in ./app, following SKILL.md, and is not
+# regenerated here. The writing step is the model's job, which is the entire
+# point of the skill.
+#
+# The rectangles below are drawn to the same geometry as ./app/src/styles.css,
+# so the frames and the code describe the same screen. Change one, change both.
 #
 # Nothing here is a mock. `extract.py` is the shipped tool with the shipped
 # defaults, and the numbers in the report come out of it.
@@ -57,7 +61,8 @@ echo "==> probe (this is the cost gate; it writes nothing)"
 python3 "$EXTRACT" probe "$VIDEO"
 
 echo "==> extract, with the three cues the transcript pass returned"
-# Cue timestamps are already offset by 1s: the narration lags what it describes.
+# Cue timestamps are each segment's start minus 1s (SKILL.md step 3): the
+# narration lags what it describes, so 10.0, 16.5 and 21.0 become 9.0, 15.5, 20.0.
 rm -rf "$FRAMES"
 python3 "$EXTRACT" extract "$VIDEO" \
   --out "$FRAMES" \
@@ -66,8 +71,8 @@ python3 "$EXTRACT" extract "$VIDEO" \
   --effort average
 
 echo "==> map the findings onto frames, BEFORE reading any of them"
-python3 "$EXTRACT" map "$FRAMES" --findings "D1=9.0,D2=15.5,Q1=20.0"
+python3 "$EXTRACT" map "$FRAMES" --findings "D1=9.0,V1=15.5,Q1=20.0"
 
 echo
-echo "Done. See report.md for what a model wrote from these frames,"
+echo "Done. See report.md for what a model wrote from these frames and ./app,"
 echo "and note how few distinct images it took to support every finding."

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Checkout</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="checkout-card">
+    <form id="checkout-form" novalidate>
+      <label for="postcode">Postcode</label>
+      <input id="postcode" name="postcode" autocomplete="postal-code">
+      <p id="postcode-error" class="field-error" hidden></p>
+      <button type="submit">Continue</button>
+    </form>
+  </main>
+
+  <div id="banner" class="banner" role="alert" hidden></div>
+
+  <!-- Staging flags. Production pages get window.APP_FLAGS from the flag service instead. -->
+  <script src="config/flags.staging.js"></script>
+  <script src="src/flags.js"></script>
+  <script src="src/checkout.js"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@ This exists because a threshold with a measurement behind it is a decision, and 
 
 Two things worth knowing before the detail:
 
-- **Every measurement below came from running the thing**, on a synthetic test recording first and then on a real 17-minute product walkthrough (3836x2110, 75fps).
+- **Every measurement below came from running the thing**, on a synthetic test recording first and then on a real 17-minute product walkthrough (3836x2110, 75fps). Section 10 draws on a second real run, a 27-minute one.
 - **The two approaches that turned out to be wrong were both the standard, obvious choice.** That is the useful part. A perceptual hash for deduplication and greyscale for image comparison are what you would reach for, and measurement said no to both.
 
 ---
@@ -40,7 +40,7 @@ Most of those are about what a tool does to *you* rather than how well it does i
 
 **What was taken, and it is the most useful finding here.** Two of the four independently converged on the same frame-selection design: a duration-scaled frame *budget* rather than a fixed capture rate, plus transcript-derived cue timestamps that are pinned and never dropped by deduplication. That was `watch-skill` and one of the skipped projects: two teams arriving at the same shape without coordinating, which is the strongest signal available that it is the right shape. It is the design this tool uses.
 
-**From `video-to-spec` came the rule that governs this entire skill: a gap is declared, never filled.** Plus the discipline of deciding up front which document is being produced, because "write up this recording" is ambiguous enough that you can do excellent work and deliver the wrong artefact. Its four archetypes are the direct ancestor of the three in `SKILL.md`.
+**From `video-to-spec` came the rule that governs all of this skill's evidence: a gap is declared, never filled.** It later turned out to need a boundary, because it had been quietly governing the output too; section 10 records that. Plus the discipline of deciding up front which document is being produced, because "write up this recording" is ambiguous enough that you can do excellent work and deliver the wrong artefact. Its four archetypes are the direct ancestor of the three in `SKILL.md`.
 
 No code was taken from any of them; these are ideas, independently implemented. But an idea that good deserves an address, and if you are reading this to decide what to trust, the same is true in reverse: you can go and check what it actually says.
 
@@ -186,6 +186,7 @@ Worth stating because the intuition usually runs the other way.
 |---|---|
 | Transcribe, extract frames, deduplicate | **No model.** Local binaries: whisper.cpp and ffmpeg. |
 | Pick which moments deserve a frame | **A text-only pass**, on the cheapest model that follows instructions. No image exists yet. A sub-agent if your host has them; same-thread if not. |
+| Resolve each item against the code, config or data | **The main model.** Reads the system under review, alongside the frames already mapped. |
 | Read the frames, write the document | **The vision-capable model.** The only step that needs the pictures, and the only one that cannot be downgraded. |
 
 The transcript-first ordering is what makes this cheap. Cue selection happens *before* any frame exists, so it is a text-only call, and images enter context exactly once instead of being paid for by a sub-agent and then again in its report.
@@ -221,7 +222,27 @@ The frames also surfaced two findings the narration never mentioned at all: a du
 
 ---
 
-## 10. Not built, on purpose
+## 10. The write-up stage was one step, and that was the defect
+
+The second real run was a 27-minute staging walkthrough. The capture half held: transcription, cues, extraction and mapping all did their jobs. The document did not. It took four full rewrites to reach a state someone could act on, and four items still reached a sent document before being withdrawn. They are listed at step 6 of `SKILL.md`; in all four the observation was right and the consequence was invented.
+
+**The cause was structural, not a lapse.** Seven of the loop's eight steps were about getting evidence. The whole documentation stage was one step called Write, with four sentences of guidance. Two consequences followed, and both showed up in the same run.
+
+**The governing rule was scoped to evidence and was silently governing the output.** "A gap is declared, not filled" is right about what was on screen. Applied to the document, it made handing back an unchecked item read as compliance, because there was no step between "I have the frames" and "I write the document" where you go and find out. That missing step is Resolve, now step 6, with three questions and a stopping rule the skill never had: having a frame is not having looked.
+
+**The defect-log spec described the recording, not the system.** It asked for a timestamp, a frame, what was said and what was visibly wrong. Not one of those fields was a screen, a route, a file, a fix or an owner, so the output was an accurate record of a video, which is not a task. It was replaced with a required shape (error, location down to `file:line`, fix, owner, all before any detail) and a stand-alone test: lift an item out with nothing around it and see whether the reader knows where to go.
+
+**Three smaller changes came from the same run.** The document is structured by product area rather than by owner or severity, because ownership changes at the area boundary and an owner-first document splits one screen in two. The reviewer's priority order is asked for at step 0, because the order of a recording is an accident. And when the narration and the frames conflict, the narration outranks the frames: the run's single worst error was overriding someone's description of their own screen on the strength of one frame, when re-extracting that range showed both of the things they had described, twelve seconds apart.
+
+**Considered and rejected: a separate write-up skill.** It would have put a handoff on the one seam that must not be crossed. The write-up needs the frames, the transcript and the difference between what was said and what was shown, which is exactly what a findings-list handoff loses, and the run's worst error happened inside a single context as it was.
+
+**The worked example had to change too.** It used to show a report that refused to write anything the frames could not show, and presented that refusal as the deliverable. That taught the failure this section describes. The example now ships a stub of the app beside the recording, built to the same geometry, and the report resolves against it. See [example/README.md](example/README.md).
+
+The rebuilt stage has since been used on two more real walkthroughs, of 4 and 5 minutes.
+
+---
+
+## 11. Not built, on purpose
 
 Both of these are parked with a stated trigger rather than sitting quietly on a roadmap.
 
