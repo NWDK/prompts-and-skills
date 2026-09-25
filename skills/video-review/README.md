@@ -1,46 +1,34 @@
 # Video Review
 
-Turns a local screen recording into a cited written document (a defect log, a runbook, or footage notes) where every claim traces to a timestamp and a frame, and every defect-log item is resolved against the code, config or data where the agent can reach them, and marked blocked where it cannot.
+Turns a local screen recording into a written document: a defect log, a runbook, or footage notes. Every claim cites a timestamp and a frame, and every defect-log item is checked against the code, config or data where the agent can reach them, then written as error, location, fix and owner.
 
-This is a **video-to-document skill**: it transcribes locally, picks the moments worth seeing, extracts only those frames, resolves each item against the system under review, and writes the document. It does not edit or assemble video.
+It transcribes locally, picks the moments worth seeing, extracts only those frames, resolves each item, and writes the document. It doesn't edit video.
 
-There's [a worked example](example/) with [the report it produces](example/report.md), if you'd rather look before installing anything. 24 seconds of video, three cues, two images, a stub app to resolve against, and one gap that survived.
+See [the worked example](example/) and [the report it produces](example/report.md) before installing anything.
 
-## Get to a first run
+## First run
 
-1. Copy this folder into your `skills/`, plus [`tools/transcription/`](../../tools/transcription/) and [`tools/video-frames/`](../../tools/video-frames/), which this one drives.
-2. Follow [`tools/transcription/SETUP.md`](../../tools/transcription/SETUP.md). Three installs and one model download; it covers both tools.
-3. Point your agent at the tools, once:
+1. Copy this folder into your `skills/`, plus [`tools/transcription/`](../../tools/transcription/) and [`tools/video-frames/`](../../tools/video-frames/).
+2. Follow [`tools/transcription/SETUP.md`](../../tools/transcription/SETUP.md): three installs and one model download, covering both tools.
+3. Tell your agent where the tools are:
 
 ```bash
 export VF=/absolute/path/to/tools/video-frames
 export TR=/absolute/path/to/tools/transcription
-python3 "$VF/extract.py" probe recording.mov
+python3 "$VF/extract.py" probe recording.mov    # writes nothing; prints the cost
 ```
 
-`probe` writes nothing. It prints the frame budget and what the run will cost, which is the gate before anything is spent.
+4. Say "review this video", or type `/video-review`.
 
-4. Then say "review this video" or type `/video-review`.
+## What your agent needs
 
-The rest of this page is what to expect, what it costs, and what leaves your
-machine. [Tools it needs](#tools-it-needs) has the detail on step 1.
+**Shell access, filesystem access, and a model that can see images.** It works in Claude Code, Codex or any coding agent that can read `SKILL.md`, and with a local vision model. It doesn't work in a browser-only chat, which can't run programs.
 
-## Known limits
+**Read access to whatever the recording shows** (the repo, config, a database or admin screen) makes the difference between a task list and a list of questions. Without it, most items come back marked blocked.
 
-- **Local video files only.** No URL or hosted-video ingest, deliberately. See [DECISIONS.md](DECISIONS.md) for the reasoning and the trigger that would change it.
-- **It costs real tokens, and the cost scales with the recording.** A 17-minute walkthrough runs around 135k visual tokens at default effort. The first step prints the estimate before anything is spent, and it is a genuine gate. Do not skip past it on someone else's behalf.
-- **Resolving items needs access to the system under review.** Without read access to its code, config or data, the document can still be written, but most items are marked blocked, with the missing access named.
-- **Very small text changes will be missed by the visual sweep.** They fall below the deduplication threshold. Anything said out loud is still caught, because spoken moments are pinned separately.
-- **Whisper mis-hears product names**, confidently. "Smooth Matte" came back as "smooth Mac". The skill checks odd nouns against the frame and flags what it cannot confirm, but you should still read proper nouns with suspicion.
-- **The transcript is measurably messier than it reads.** On one 17-minute recording at `large-v3`: 28% of segments had **zero duration**, 36% **repeated the previous segment**, and the last 25 collapsed into 5 distinct sentences: a hallucination loop, not dropped audio. Timecodes drift about half a second on top of that. None of it errors. The frames are the check on this: they carry real `ffprobe` timestamps, so a mis-timed cue shows up on inspection. If exact timing matters, cross-check against a second model.
-- **Requires a local setup**: whisper.cpp, ffmpeg, Pillow, and a model file of up to ~2.9 GB. This is not a paste-into-a-Project skill.
-- **Your agent must be able to see images and run shell commands.** A text-only model can do the cue pass and write prose but cannot verify one claim against a frame, which turns the output into a transcript summary formatted like a defect log, which is worse than nothing, because it looks checked.
-- **Only the defect-log archetype has been validated end to end.** Runbook and footage notes are built from the same machinery and follow the same rules, but no real run has been measured for either. Treat them as usable and unproven.
-- **macOS filename trap:** screen-recording filenames contain a U+202F narrow no-break space before "pm". It looks like an ordinary space, so a retyped path fails with "video not found". Glob the filename instead of typing it.
+## What leaves your machine
 
-## What actually leaves your machine
-
-Worth being exact about, because the material is usually more sensitive than it looks. Someone narrating a walkthrough is talking over unreleased features, pre-launch pricing, and customer data on screen.
+Walkthroughs are usually more sensitive than they look: unreleased features, pricing, customer data on screen.
 
 ```mermaid
 flowchart TD
@@ -51,7 +39,7 @@ flowchart TD
     E --> F["frames/ + manifest.json"]
     F --> G["extract.py map<br/>findings to minimal image set"]
 
-    subgraph local["LOCAL: these tools have no network path at all"]
+    subgraph local["LOCAL: these tools have no network path"]
         A
         B
         C
@@ -60,125 +48,53 @@ flowchart TD
         G
     end
 
-    C -. "transcript text crosses here" .-> H
-    G -. "only the mapped frames cross here" .-> I
+    C -. "transcript text" .-> H
+    G -. "only the mapped frames" .-> I
 
     subgraph model["YOUR MODEL: a cloud provider, or a local vision model"]
-        H["cue pass<br/>text only, no images exist yet"]
+        H["cue pass<br/>text only"]
         R["resolve<br/>reads what you let it reach"]
-        I["review and write<br/>REQUIRES VISION"]
+        I["review and write<br/>needs vision"]
     end
 
     R -. "queries go out" .-> S["the system under review<br/>code · config · data"]
-    S -. "what it reads comes back" .-> R
+    S -. "results come back" .-> R
 
-    H -. "cue timestamps return" .-> E
+    H -. "cue timestamps" .-> E
     R --> I
     I --> J["report.md"]
 ```
 
-**The bundled tools contain no network path and no telemetry.** That is a property of the executables and you can check it: `grep -rnoE 'https?://' tools/` returns documentation links and package sources, nothing else. Transcription, frame extraction, deduplication and evidence packaging never send anything anywhere.
+The bundled tools have no network path and no telemetry; `grep -rnoE 'https?://' tools/` returns only documentation links and package sources. Three things reach your model: transcript text (all of it, if you use the transcription tool's optional cleanup pass), the mapped frames (on one 17-minute walkthrough, 28 of 96 extracted), and whatever the resolve step reads.
 
-Note what the diagram makes obvious: **there are three crossings.** The tools decide how much goes through the second one: on a real 17-minute walkthrough, 96 distinct frames were extracted locally and **28 crossed**, so the mapping step is a privacy control as much as a cost one. **Your access decides the third.** The resolve step reads whatever code, config or data the agent can reach, and that goes to your model like everything else it reads.
+- **Cloud-assisted**, which is what most people run: assume anything visible in a cited frame has been sent. Crop or avoid customer data and credentials on screen.
+- **Fully local**, with a local vision model: nothing leaves the machine except the queries the resolve step sends to systems you point it at, and those can carry values read off the recording, such as an order number.
 
-**But three stages need a model to think**, and those go wherever your agent host goes:
+First-time setup downloads ffmpeg, whisper.cpp and a model file. Nothing you process afterwards is uploaded by the tools.
 
-| Stage | Runs where |
+## If a piece is missing
+
+| Missing | What happens |
 |---|---|
-| Transcription, extraction, deduplication, packaging | **Always local.** No network path exists. |
-| Picking which moments deserve a frame | Your configured model: reads **transcript text** |
-| Resolving each item against the system under review | Your configured model: reads **whatever code, config or data you give it access to** |
-| Reading the frames and writing the document | Your configured model: reads **selected frames** |
+| Transcription | Supply your own `.srt`; everything else still works |
+| Cue pass | You keep the visual sweep but lose the moments someone said mattered |
+| Mapping | You read the whole folder: about 167k visual tokens instead of 49k on a real run |
+| Access to the system | Items can be written, but most are blocked |
+| **Vision** | **Nothing can be checked against a frame.** The output looks like a defect log and isn't one |
 
-So there are two honest deployment modes:
+## Known limits
 
-- **Cloud-assisted** (what most people will run). Preprocessing is local; the selected transcript text, the selected frames, and whatever the resolve step reads are sent to your provider. **Assume anything visible in a cited frame has been sent.** Redact or avoid customer data and credentials on screen, or crop the recording before you start.
-- **Fully local.** The same preprocessing, with a local vision-capable agent doing the reasoning stages. Nothing leaves the machine except whatever queries the resolve step sends to systems you point it at, and those queries can carry values read off the recording, such as an order number seen in a frame. This needs a host that can see images: a text-only local model can do the cue pass but cannot do the visual review, which is the half that makes the output trustworthy.
+- Local video files only.
+- It costs real tokens: a 17-minute walkthrough is about 135k visual tokens at default effort. The first step prints the estimate before anything is spent.
+- Very small text changes fall below the visual threshold. Anything said out loud is still caught.
+- Whisper mishears product names ("Smooth Matte" came back as "smooth Mac"), and its timings drift. The skill checks odd nouns against the frame; read proper nouns with suspicion anyway.
+- Only the defect log has been validated on real footage. Runbooks and footage notes use the same machinery and are less tested.
+- macOS screen-recording filenames contain a narrow no-break space before "pm", so a retyped path fails. Glob the name instead.
 
-Two more boundaries worth stating plainly: the optional model-assisted transcript cleanup follows the same rule as your agent host, and **first-time setup does download** ffmpeg, whisper.cpp and a model file over the network, even though nothing you later process is uploaded.
+## Customise it
 
-### What each stage needs, and what it costs you if you lack it
+- **Start a glossary** for what you record most: copy `tools/transcription/glossaries/_template.txt` and add product and people names. Add only spellings you're sure of.
+- **Add a `_global.txt` glossary** for names that recur across everything.
+- **Add a document type** as a new row in `SKILL.md`'s step 0 table rather than bending an existing one.
 
-| Stage | Runs on | Needs | Without it |
-|---|---|---|---|
-| Transcribe | whisper.cpp | shell, ~2.9 GB model | No transcript, so no cue pass. Supply your own `.srt` and the rest still works. |
-| Extract / dedup | ffmpeg + Pillow | shell, filesystem | Nothing works. This is the tool. |
-| Cue pass | your model | text only | Falls back to the visual sweep alone: you keep the frames, you lose "the moments someone said mattered". |
-| Map | Python + Pillow | filesystem | Still works, but you read the whole folder: ~167k visual tokens instead of ~49k on a real run. |
-| Resolve | your model | read access to the code, config or data | The document can still be written, but most items land as *blocked*, with the missing access named. It stops being a task list and becomes a list of questions. |
-| Review + write | your model | **vision** | **The output stops being trustworthy.** No claim can be checked against a frame, so everything becomes unverified, a transcript summary in a defect log's clothing. |
-| Sub-agents | optional | nothing | Cue pass runs in the main thread instead. Costs context, changes nothing else. |
-
-The row that decides whether this skill is usable at all is **vision**. Everything else degrades gracefully.
-
-## What it handles
-
-- A recorded walkthrough where you narrated problems → a defect log for developers, where each item carries the error, its location down to `file:line`, the fix and an owner, plus a "verified correct" list of what not to touch
-- A recording of how something is done → a runbook with the exact steps and values
-- An interview or marketing recording → quotable lines with in/out timecodes and notes on what is usable
-- Going back for a moment the first pass missed, without re-sending anything already reviewed
-
-## How to invoke it
-
-Type `/video-review` in your Claude Code session, or describe what you want:
-
-- "review this video"
-- "watch this walkthrough"
-- "turn this recording into a task list"
-- "what did I flag in this recording?"
-- "write up this recording"
-
-## Key behaviours
-
-- **A gap is declared, never filled, and never declared untried.** If a frame does not show what the narration describes, that is not reasoned into a plausible-sounding finding. On the first real run this caught a narrated claim that its own frame contradicted, which would otherwise have gone to developers as a bug that did not exist. But before anything is declared, the resolve step goes and checks the code, config or data. A gap reaches the document only once someone has tried to close it.
-- **Every item is a task, not a description of a video.** Error, location (screen, route, `file:line`), fix and owner, before any evidence, and each item still makes sense when lifted out of the document on its own.
-- **Cost is shown before it is spent.** The probe step writes nothing and prints the estimate for all three effort levels.
-- **Reactions and findings stay separate.** "I don't love this" is an open question; "this is wrong" is a finding. They go to different people.
-- **Every deterministic stage is local, and the reasoning stages go wherever your agent goes.** Transcription, extraction, deduplication and packaging run on your machine with no network path at all. Cue selection, resolving each item and reading the frames are done by a model, so on a cloud host, selected transcript text, whatever the resolve step reads, and selected frames are sent to that provider. See [What actually leaves your machine](#what-actually-leaves-your-machine).
-- **Findings are mapped to frames before any frame is read.** Several findings routinely land on one image, so reading the mapped set rather than the folder cut a real run from ~167k visual tokens to ~49k for the same document.
-- **Product names get harvested back into the glossary** after you confirm them on screen, so the next recording in the same domain does not repeat the same mistranscriptions.
-
-## Tools it needs
-
-Unlike most skills here, this one drives two real programs. Copy both:
-
-| Tool | What it does |
-|---|---|
-| [`tools/transcription/`](../../tools/transcription/) | Local whisper.cpp transcription with glossary priming |
-| [`tools/video-frames/`](../../tools/video-frames/) | Decides which frames are worth paying for, and extracts them |
-
-Setup is [`tools/transcription/SETUP.md`](../../tools/transcription/SETUP.md). It covers everything both tools need, including the frame extractor's dependencies. Three installs and one model download.
-
-**Tell your agent where they landed.** The example commands are written `tools/video-frames/extract.py`, which only resolves if you happen to be standing at the root of the workspace you copied them into. Set these once and the commands work from anywhere:
-
-```bash
-export VF=/absolute/path/to/tools/video-frames
-export TR=/absolute/path/to/tools/transcription
-
-python3 "$VF/extract.py" probe recording.mov      # then use $VF / $TR throughout
-```
-
-The tools resolve their *own* dependencies relative to their own location (`transcribe.sh` finds its model whatever directory you call it from), so this is the only path that needs telling.
-
-## Which agents this works with
-
-The deterministic half is plain ffmpeg, whisper.cpp and Python, so nothing here is tied to one vendor. What it needs from a host is **shell access, filesystem access, and a model that can see images.**
-
-| Host | Works? |
-|---|---|
-| **Claude Code** | Yes, and it is what this was built and verified on. Install per the repo README; invoke with `/video-review`. |
-| **Codex or another coding agent** | Yes. Point the agent at `SKILL.md` and set `VF`/`TR` as above. Treat the token estimate as Claude's arithmetic. The frame counts are the provider-neutral number. |
-| **A local vision-capable agent** | Yes, and this is the only configuration where **nothing leaves the machine**, apart from any queries the resolve step sends to systems you point it at. Same workflow; the reasoning stages run on your local model. |
-| **Browser-only chat** (ChatGPT, Claude.ai without tools) | **No.** Not a documentation gap: the pipeline needs to run programs and read files, and a chat window cannot. Paste-in skills work; this one does not. |
-
-Verified from a directory outside the repo, on a copy installed into a separate workspace: `probe` → `extract` → `map` → read the frames, all through `$VF`. The only thing that fails is the bare relative path, which is what the export above is for.
-
-## Customise for your context
-
-- **Start a glossary** for whatever you record most. Copy `tools/transcription/glossaries/_template.txt`, add the product and people names, and the transcript stops mangling them. Two minutes, and it pays back on every future recording. Only add spellings you are certain of. A wrong one actively biases the transcript toward the wrong spelling.
-- **Add a `_global.txt` glossary** if some names recur across everything you record. Not shipped here, because yours would be nothing like anyone else's.
-- **Pick your archetype** in `SKILL.md`'s Step 0 table. The three provided (defect log, runbook, footage notes) differ in *content*, not formatting. If you produce a fourth kind of document regularly, add a row rather than bending an existing one.
-
-## Why the defaults are what they are
-
-[DECISIONS.md](DECISIONS.md) records what was tried, what was measured, and what was rejected, including two cases where the standard, obvious approach was measurably wrong, and one bug that was introduced by the fix for another bug. If you are evaluating whether to trust this, that is the file to read.
+[DECISIONS.md](DECISIONS.md) has why the defaults are what they are, with the measurements.

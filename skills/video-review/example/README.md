@@ -1,50 +1,40 @@
 # Worked example
 
-A complete run, end to end, so you can see what this skill produces before deciding whether to install anything.
-
-**Start with [report.md](report.md).** That is the deliverable. Everything else here exists to show it was produced by the real pipeline and checked against real code, rather than written to look good.
+A complete run, so you can see the output before installing anything. **Start with [report.md](report.md).**
 
 | File | What it is |
 |---|---|
-| [`report.md`](report.md) | The output: a defect log where every item opens with what is wrong, where, what to do and whose it is, cites a frame, and stands alone. One gap survived |
+| [`report.md`](report.md) | The output: a defect log where each item leads with what's wrong, where, what to do and whose it is |
 | [`app/`](app/) | A stub of the checkout the recording shows. The resolve step reads it |
-| [`make-example.sh`](make-example.sh) | Regenerates the recording and frames. Real `extract.py`, shipped defaults, no mocks |
+| [`make-example.sh`](make-example.sh) | Regenerates the recording and frames with the real `extract.py` and shipped defaults |
 | [`checkout-walkthrough.transcript.srt`](checkout-walkthrough.transcript.srt) | The narration |
-| `checkout-walkthrough.mp4` | Generated, not committed |
-| `checkout-walkthrough-frames/` | Generated, not committed; frames plus `manifest.json` |
+| `checkout-walkthrough.mp4`, `checkout-walkthrough-frames/` | Generated, not committed |
 
 ```bash
-./make-example.sh        # needs ffmpeg + Pillow; ~5 seconds
+./make-example.sh                          # needs ffmpeg + Pillow; about 5 seconds
+python3 -m http.server 8000 -d app         # optional: click through the stub at 1600x900
 ```
 
-The stub needs nothing to read. To click through it, serve it with any static file server and open it at 1600x900:
+## What's synthetic
 
-```bash
-python3 -m http.server 8000 -d app      # then open http://localhost:8000
-```
+The recording is coloured rectangles drawn by ffmpeg, with no readable text. The app is a stub written for this example; the recording isn't a capture of it, but both are built to the same geometry. The red block in the frame is 360x50 at (1180, 150) on a 1600x900 screen, and so is the `.banner` rule in [`app/src/styles.css`](app/src/styles.css).
 
-## What is synthetic, and why it still teaches the right thing
+## What the resolve step does here
 
-**The recording is synthetic**: coloured rectangles built by ffmpeg, carrying no readable text. **The app is a stub** written for this example, and the recording is not a capture of it. Both are built to the same geometry, so the frames and the code describe the same screen, the way a real recording and a real codebase do. The red block in the frame is 360x50 at (1180, 150) on a 1600x900 screen, and so is the `.banner` rule in [`app/src/styles.css`](app/src/styles.css).
+The frames alone show a red block in the wrong place and then a green page. On their own they leave four questions open: is the red block an error, is there a postcode field and was it empty, is the green page a confirmation, and is the review step missing or skipped. The code answers all four:
 
-**Frames alone give you symptoms.** Read without the app, this recording yields a red block in the wrong place, a green page, and four open questions: whether the red block is an error at all, whether a postcode field exists and was left empty, whether the green page is a confirmation, and whether the review step is missing or skipped. A report written from the frames alone would stop there and could pass off its refusal to guess as care. That is the failure, politely done: nothing invented, and nothing a developer could act on.
+- The red block is the postcode error. `showBanner()` is the only code that shows it, and only when the postcode is empty. So the field exists and was empty.
+- The fix is already half-built: an inline slot for the message sits under the field, unused.
+- The green page is the confirmation page. Its background is the only full-page green in the app, and the card matches `.confirmation-card`.
+- The review step exists. A staging flag switches it off, so it's a decision for the flag's owner, not a bug. Whether production has the same value isn't in the repository, so that's the one gap left, and the flags file names who holds it.
 
-**The resolve step answers all four from the code**, and turns the last one into the only question worth asking:
-
-- The red block is the postcode error. `showBanner()` is the only code that shows it, and it runs only when the postcode is empty.
-- So the field exists and was empty. The same branch also shows the fix: an inline slot for the message already exists under the field, and nothing uses it.
-- The green page is the confirmation page. Its background rule is the only full-page green in the app, and the card matches `.confirmation-card`.
-- The review step is not missing. It exists, and a staging flag switches it off, which makes it a decision for whoever owns that flag rather than a bug. What the code cannot say is whether production has the same value, because production flags are not in the repository. That is the one gap in the report, and it names who can close it: the flags file says who holds production's values.
-
-**The writing step is not scripted.** The script builds the recording and runs extraction and mapping. `report.md` was then written by a model reading those frames and the stub, following `SKILL.md`. That division is the skill: the deterministic parts are a pipeline, the judgment is not, and generating the report from a template would misrepresent what this does.
+`report.md` was written by a model reading the frames and the stub, following `SKILL.md`. The script covers only the deterministic part.
 
 ## What to notice
 
-- **Every item leads with what to act on, before any evidence.** The defect: error, location, fix, owner. The decision item puts the decision where the fix would go. The open question has no fix at all. Stop reading there and you can still start work.
-- **Lift any item out on its own** and it still names its screen and its file.
-- **The review-step item is marked as a decision, not a defect, and says whose.** The code showed the step works and a setting turns it off. Calling that a bug would have been an invented consequence of a correct observation.
-- **The one surviving gap is about production.** The recording never showed it, and the only file that sets flag values is the staging one.
-- **24 seconds of video collapses to 3 distinct images**, and the report needed 2 of them: ~3,584 visual tokens against a 43,008 ceiling. Most of a walkthrough is a screen that is not moving.
-- **Two items cite the same image, captured at neither of their timestamps.** The report says so. Nobody assembling screenshots by hand would think to.
-- **A reaction stayed a reaction.** *"I don't love how much green there is"* is an open question for design, with a location, not a defect.
-- **The one thing explicitly confirmed as correct is carried too**, with its location, so the devs know what not to touch.
+- Each item leads with what to act on. The defect has error, location, fix and owner. The decision item puts the decision where the fix would go. The open question has no fix.
+- Each item still names its screen and file when lifted out on its own.
+- The review-step item is a decision, not a defect. The code showed the step works and a setting turns it off.
+- 24 seconds of video collapses to 3 distinct images, and the report needed 2: about 3,584 visual tokens against a 43,008 ceiling.
+- Two items cite one image, captured at neither of their timestamps, and the report says so.
+- The one thing confirmed as correct is listed with its location, so nobody changes it.
