@@ -1,0 +1,6 @@
+# Who owns what in this stub app. Later lines win.
+*.html               web-lead@example.com
+/src/checkout.js     web-lead@example.com
+/src/flags.js        web-lead@example.com
+/src/styles.css      design-lead@example.com
+/config/             product-lead@example.com

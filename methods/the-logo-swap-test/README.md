@@ -4,111 +4,78 @@ One question for whether an interface contains any decisions:
 
 > Could a competitor swap in their logo and keep the design?
 
-If yes, nothing on the screen belongs to the product. That's the actual
-problem, and it's worth separating from the question people usually ask
-instead.
+If yes, nothing on the screen belongs to the product.
 
 ## "Is this AI-generated" is the wrong question
 
-Most writing on this is a banned-motif list. Purple gradients, glass cards,
-that one font, rounded everything. Lists like that are wrong in both
-directions: they punish genres that legitimately own those features, and
-they miss a generic interface built entirely from unfashionable parts.
-
-Whether a machine made it doesn't matter. Plenty of hand-built interfaces
-fail the logo swap, and a machine-built one that made real decisions passes.
-What you're looking for is unexamined defaults, whatever produced them.
+Most writing on this is a banned-motif list: gradients, glass cards,
+rounded everything, punishing genres that legitimately own those features
+while missing a generic interface made from unfashionable parts. Whether
+a machine made it doesn't matter: look for unexamined defaults.
 
 ## One feature is never the finding
 
-The single most common mistake is converting a surface feature straight into
-a verdict. A gradient is an ingredient. So is a font, a radius, an icon set.
+The common mistake: converting a surface feature straight into a verdict.
+One label per observation:
 
-Give every observation exactly one label:
+- **Surface feature.** Neutral, not evidence on its own.
+- **Repeated default.** One treatment imposed across unrelated content.
+- **Family-style cluster.** Correlated defaults across major regions.
+- **Poor craft.** A hierarchy or accessibility failure, often more urgent
+  than generic.
+- **Low brand specificity.** The logo swap itself.
 
-- **Surface feature.** A neutral ingredient. Not evidence of anything on its
-  own.
-- **Repeated default.** One treatment imposed across unrelated content,
-  ignoring hierarchy and how sensitive the material is.
-- **Family-style cluster.** Several correlated defaults appearing together
-  across major regions.
-- **Poor craft.** A hierarchy, state, responsive or accessibility failure.
-  Different from looking generic, and often more urgent.
-- **Low brand specificity.** The logo swap. Different again from poor craft:
-  an interface can be beautifully made and belong to nobody.
-
-A finding gets real when several hold at once: correlated defaults appearing
-together, repeating across regions, applied to content of clearly different
-importance, with no relationship to the task or audience, and no authentic
-product states or proprietary material anywhere.
-
-"Three correlated features across two major regions" is a useful prompt to
-go and look harder. It is not a threshold and I have not validated it as one.
+A finding gets real when several hold at once: correlated, repeating,
+unrelated to task or audience.
 
 ## Look before you measure
 
-Before reading the source, the prompt, or who made it, look at the render
-and write down four things: the dominant motifs, any family resemblance you
-suspect, the single most distinctive element, and what would survive the
-logo swap.
-
-Do this first or you don't get to do it at all. Once you know the interface
-came out of a model, you will find model tells, and you won't be able to
-tell that from seeing them. If you already know, say so in the report and
-still record the impression before opening anything.
+Before reading the source or who made it: note the dominant motifs, any
+family resemblance, the most distinctive element, and what would survive
+the logo swap. Do this first, or not at all: once you know a model made
+it, you'll find tells you can't un-know.
 
 ## Test every finding against the genre
 
-This is the step that separates an audit from a banned list. A naive
-detector punishes precisely the features some genres own.
+This separates an audit from a banned list: a naive detector punishes the
+features some genres own.
 
-| Genre | What a naive detector flags | The better question |
+| Genre | Naive flag | Better question |
 |---|---|---|
-| Editorial | Serif, mono metadata, paper tones, rules | Does hierarchy respond to the material, or is editorial chrome pasted on? |
-| Brutalist | Raw HTML, hard borders, default link blue | Is the constraint coherent and functional, or just broken? |
-| Luxury | Sparse copy, centred, oversized serif, neutral | Is there proprietary art direction and material detail? |
-| Developer tool | Dark theme, mono, grids, outline icons | Are the data, states and density authentic to the workflow? |
-| Documentation | Repetition, cards, accordions, side nav | Is the repetition the content's own taxonomy? |
-| Design system | Default tokens, radii, icon specimens | Is this the system's own authored language? Compliance proves consistency, never quality |
+| Editorial | Serif, paper tones | Responds to material? |
+| Brutalist | Raw HTML | Coherent, or broken? |
+| Luxury | Sparse, centred serif | Proprietary art direction? |
+| Dev tool | Dark theme, mono | Authentic states, density? |
+| Design system | Tokens, specimens | System's own language? |
 
-A design-system specimen page should be excluded from provenance findings
-entirely. It is supposed to look like its own defaults.
+Leave out specimen pages entirely: they're meant to show a system's own
+defaults.
 
 ## Don't score it
 
-I built a numeric version first and killed it. A score out of twenty
-launders a judgement call into something that looks measured, and the number
-gets quoted downstream long after the reasoning is gone.
-
-Four verdicts, all categorical. **Clean**, **Watch**, **Slop risk**, and
-**Unscored** for when you couldn't see enough to say. Anyone selling you a
-numeric slop detector is selling false precision.
+I built a numeric version and killed it: a score launders a judgement
+into something that looks measured, and outlives the reasoning. Four
+categorical verdicts instead: **Clean**, **Watch**, **Slop risk**, and
+**Unscored** for when you couldn't see enough to say.
 
 ## You are the worst judge of your own accent
 
-If you are using a model to run this, it under-rates its own family's house
-style. It hears its own accent as no accent.
+A model running this under-rates its own family's house style: it hears
+its own accent as no accent, and I've watched this twice, corrected only
+by a different model family plus a person.
 
-I have watched this twice, in both directions. A Claude grader scored a
-Claude-built guide as fully authored. A GPT grader scored its own family's
-redesign clean. Both were corrected only by a different model family plus a
-person. Two cases is not a law and I'm not claiming one.
+When the target plausibly matches the auditing model's own style: say so,
+drop confidence, mark any Clean verdict provisional.
 
-So when the thing you're auditing plausibly matches the house style of the
-model auditing it: say so, drop your confidence, and mark any Clean verdict
-provisional. Mechanical evidence and craft findings are still fine, judge
-those normally.
-
-A single-model audit that declares its blind spot is a valid result. One
-that quietly returns Clean on its own family's work is not.
+Escalate only when the decision matters, the verdict is disputed, or a likely
+own-family design came back Clean; otherwise, naming the blind spot is
+enough.
 
 ## What it won't tell you
 
-Whether the design is good. This finds unexamined defaults and missing
-decisions. An interface can pass the logo swap, be full of authored
-decisions, and still be worse than the generic version it replaced.
+Whether the design is good. This finds unexamined defaults, not quality.
 
 ## Feedback
 
 If a genre control misfires or you find a class this misses:
-[open an issue](../../issues).
+[open an issue](https://github.com/NWDK/prompts-and-skills/issues).
