@@ -485,7 +485,7 @@ def detect_scene_frames(video, out_dir, w, h, threshold, start=None, end=None):
         # eq(n,0) keeps the very first frame so a static recording still yields
         # something rather than an empty set.
         "-vf", rf"select='eq(n\,0)+gt(scene\,{threshold})',{_scale_filter(w, h)},showinfo",
-        "-vsync", "vfr", "-q:v", "2",
+        "-fps_mode", "vfr", "-q:v", "2",
         os.path.join(tmp, "s_%05d.jpg"),
     ]
     r = subprocess.run(cmd, capture_output=True, text=True)
