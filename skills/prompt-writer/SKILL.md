@@ -1,261 +1,139 @@
 ---
 name: prompt-writer
-description: Design or refine a prompt without executing the underlying task. Use when the user asks to write or improve a prompt, or wants a brief for a case where there is no second turn to correct course: a handoff into a fresh context or worktree, a sub-agent brief, an unattended or one-shot run, or a deep-research prompt. Also use it to tell them when they do not need a prompt at all.
+description: Design or refine a prompt without executing the underlying task. Use when the user wants a prompt written or improved, or a brief for a case with no second turn to correct course, such as a fresh-context handoff, a sub-agent brief, an unattended run, or a deep-research prompt. Also use it to tell them when they don't need a prompt at all.
 ---
 
 # Prompt Writer
 
 ## When this is worth doing, and when it isn't
 
-Most of what got called prompt engineering has stopped paying. Current
-models do better with a goal and the constraints than with a script, and a
-prompt written prescriptively for an older model measurably lowers output
-quality on a newer one. If the user is in a conversation and can see the
-output, the fastest path is to ask for the thing and correct it. Say so
-rather than producing a prompt they did not need.
+Most of what got called prompt engineering has stopped paying: current models do better with a goal and constraints than a script, and scripting for an older model measurably lowers output quality on a newer one. If the user can see the output and correct it, that beats any prompt this would write.
 
-What still pays is the case where correcting it is not available: the
-prompt has to carry everything, because there is no second turn or nobody
-is watching.
+Use this skill where correcting it isn't available, because the prompt has to carry everything: a handoff to a fresh context (new session or worktree); a sub-agent brief; an unattended or one-shot run; deep research, where the question's shape decides what comes back.
 
-Use this skill for:
-
-- **a handoff to a fresh context.** A new session, a worktree, a new window
-  after a long one ended.
-- **a sub-agent brief.** Spawned work that starts from the prompt and
-  little else.
-- **an unattended or one-shot run.** Overnight, batched, scheduled.
-- **deep research.** The shape of the question determines the shape of what
-  comes back, and the intermediate steps are not reviewed.
-
-There is a fifth case, and it is about the person rather than the model.
-Someone newer to this may want a tighter leash while they build a feel for
-what these models do unprompted. That is reasonable. Give them the
-structure, and say which parts they can drop once they trust it. The
-executor table below is where to loosen first.
-
-Not for executing the underlying task.
+Exception: someone newer to prompting may want a tighter leash. Give them the structure, and say which parts to drop once they trust it.
 
 ## Core Rule
 
 Never answer, research, summarise, code, or complete the user's real task when this skill is active.
 
-Only return:
-
-- a prompt
-- a prompt set
-- a prompt workflow
-- brief notes explaining prompt-design choices when useful
+Only return: a prompt, a prompt set, a prompt workflow, or brief notes explaining prompt-design choices when useful.
 
 ## Operating Modes
 
-Classify the request: writing one from scratch, refining a draft the user
-pasted, designing a multi-step or agentic setup, or writing a handoff into
-a fresh context. The last two are where this skill earns its keep.
+Classify the request: from scratch, refining a pasted draft, a multi-step or agentic setup, or a handoff into a fresh context.
 
 ## Complexity Tiers
 
-Before drafting, identify which tier the prompt sits at. Use only as much structure as the tier needs.
+Identify which tier the prompt sits at before drafting. Use only as much structure as the tier needs.
 
 | Tier | What it is | Key elements |
 |---|---|---|
-| Quick | Single conversational exchange, low stakes | Clarity + output format only |
+| Quick | Single exchange, low stakes | Clarity + output format only |
 | Structured | Specific output, domain knowledge, or accuracy matters | Role + context + XML structure + examples |
-| Chained | 2–5 step pipeline, intermediate outputs used downstream | Prompt-per-step, clear handoffs, stop conditions |
+| Chained | 2–5 step pipeline, outputs used downstream | Prompt-per-step, clear handoffs, stop conditions |
 | Agentic | Tool use, decisions, loops, sub-agents | Context design + spawn criteria + scope gates + stop conditions |
 
 ## Executor
 
-Complexity describes the task. This describes who runs it. The two are independent, and the executor changes the draft more than the tier does: the same Structured-tier task written for a frontier model and for a sub-agent should not look alike.
+Complexity describes the task; this describes who runs it, and changes the draft more than the tier does.
 
 | Executor | How to point it |
 |---|---|
-| **Frontier model, interactive** (you see the output and can iterate) | Goal, constraints, definition of done. No step-by-step scripts. Prompts written prescriptively for older models measurably reduce output quality on current frontier models; the model's own plan is usually better than a hand-written one. |
-| **Frontier model, one-shot or unattended** (overnight run, batch job, scheduled agent) | Same shape, plus explicit stop conditions, exclusions, and what "done" means. There is no second turn to correct course, so close the exits rather than scripting the route. |
-| **Sub-agent** (spawned into a fresh context by an orchestrator) | Explicit to the point of feeling redundant. It starts from your prompt and little else, and will not generalise an instruction you gave for only one case. Every path, input, constraint, and output shape goes in the prompt. **Whether it can come back and ask depends on the harness**: some can be messaged mid-run, most cannot. Check yours, and where it cannot, write as though the prompt is your only turn. |
-| **External system** (another vendor's model, or a hosted research or agent product) | Point precisely: one pointed question, sources to prefer or avoid, the output shape you want back, and how to handle uncertainty. One shot, and no visibility into what it did. |
+| **Frontier, interactive** | Goal, constraints, done-when. No step-by-step scripts: its own plan beats a hand-written one. |
+| **Frontier, one-shot / unattended** | Same, plus stop conditions, exclusions, what "done" means. No second turn: close the exits instead of scripting the route. |
+| **Sub-agent** (fresh context) | Explicit to the point of redundancy; starts from the prompt and little else, won't generalise a one-case instruction. Every path, input, constraint, output shape goes in. Most can't ask mid-run: write as though the prompt is the only turn. |
+| **External system** (another vendor's model, hosted research/agent product) | One pointed question, sources to prefer or avoid, the output shape wanted, how to handle uncertainty. One shot, no visibility in. |
 
-The failure modes sit at opposite ends of the same axis. Over-specifying a frontier model costs you quality; under-specifying a sub-agent or an external system costs you the run.
-
-When the executor is unstated and the tier is Structured or above, ask. It is the single input most likely to change the draft.
+Over-specifying a frontier model costs quality; under-specifying a sub-agent or external system costs the run. Executor unstated, tier Structured or above: ask.
 
 ## Default Behavior
 
-1. For quick-tier requests, produce an improved prompt directly with minimal or no clarification.
-2. For structured-tier and above, ask only the minimum questions needed to pin down: goal, inputs, audience, output format, constraints, executor (see below), stakes.
-3. If the user already pasted something that looks like a prompt, do not answer it. Refine it.
-4. Default to one strong primary prompt. Add variants only when they materially help.
+1. Quick-tier: produce an improved prompt directly, with minimal or no clarification.
+2. Structured-tier and above: ask only the minimum questions to pin down goal, inputs, audience, output format, constraints, executor, stakes.
+3. If the user already pasted something that looks like a prompt, refine it, don't answer it.
+4. Default to one strong prompt. Add variants only when they materially help.
 
 ## Prompt Design Pattern
-
-Use this pattern internally when drafting. Tags earn their place when a
-prompt is long enough that a section needs referring to later, or when
-something other than a person will parse it. They are not a performance
-trick, and a short prompt does not need them: current models read plain
-prose fine, and tagging a three-line request is cargo cult.
 
 ```
 <role>...</role>
 <task>...</task>
 <context>...</context>
-<examples>...</examples>          <!-- include for format-sensitive or accuracy-critical outputs -->
+<examples>...</examples>          <!-- format-sensitive or accuracy-critical outputs -->
 <output_format>...</output_format>
 <stop_conditions>...</stop_conditions>
 ```
 
-Quick-tier prompts do not need XML tags.
+Tags earn their place when a section needs referring back to, or when something other than a person will parse it, not as decoration. Quick-tier prompts don't need them.
+
+Include worked examples wherever format, tone, or precision matters: two to three labelled, inside `<examples>` tags so the model reads them as demonstrations, not live tasks. Flag it when examples are the most important quality lever.
 
 ## Reasoning and Effort
 
-Reasoning is no longer a feature you switch on. On current frontier models it is adaptive by default, and on the most capable ones it cannot be disabled. Design around it rather than for it:
+Reasoning is adaptive by default on current frontier models, and can't be disabled on the most capable ones.
 
-- **Never add "think step by step", a `<reasoning>` block, or manual chain-of-thought scaffolding.** The model reasons internally; the scaffolding competes with it and can degrade the result.
-- **Prompt for outcomes, not steps.** In agentic prompts, let the model think between tool calls instead of scripting the sequence.
-- **The dial is effort, not thinking.** Where the target exposes an effort level, that is the intelligence / latency / cost control. Recommend a level instead of trying to shape reasoning depth in prose. Low for scoped or latency-sensitive work, high as a general default, the top levels for hard agentic and coding work. Pick the level from the task rather than defaulting to the maximum.
-- **Do not hardcode model versions.** Reason about the executor class above. Thinking defaults, effort ranges, and parameter names have all changed within the last few releases, so a version list in a skill file goes stale within weeks. Name a version only where behaviour genuinely differs, and verify it against current releases before relying on it.
-
-## Few-Shot Examples
-
-Include worked examples in any prompt where format, tone, or precision matters, not just safety-critical ones. Two to three labeled examples are usually enough. Place them inside `<examples>` tags so the model reads them as demonstrations, not as live tasks.
-
-When examples are the most important quality lever, say so in the prompt-design notes.
+- Never add "think step by step", a `<reasoning>` block, or chain-of-thought scaffolding: it competes with the model's own reasoning.
+- Prompt for outcomes, not steps; let the model think between tool calls instead of scripting the sequence.
+- The dial is effort, not thinking: recommend a level rather than shaping reasoning depth in prose. Low for scoped or latency-sensitive work, high as a default, top levels for hard agentic and coding work.
+- Don't hardcode model versions; reason about executor class instead, and verify any stated version against current releases.
 
 ## Common Patterns
 
-These are the three prompts most frequently needed. Apply the relevant design notes when the request matches.
+### Session handoff / fresh-context brief
 
-### Session Handoff / Fresh-Context Brief
+Wrapping up a session in a clean context window; also a contractor handoff, or a note to whoever opens the project cold later.
 
-Wrapping up a session and starting a new agent in a clean context window.
-Also a contractor handoff, a ticket, or a note to whoever opens the project
-cold in three months, including you.
+**Test:** could a cold stranger act on this without asking or looking anything up? An unstated resource becomes a wrong turn or a stale assumption, silently and fast with an agent.
 
-**The test the draft has to pass: could a cold stranger act on this without
-asking anything or looking anything up?** If not, it is not finished. Every
-unstated resource becomes a search, a wrong turn, or a stale assumption,
-and with an agent it becomes those silently and fast.
+Key elements: current state, verified against the system not recalled; context the receiver doesn't have; exact resources (full paths, URLs, IDs); a scope fence naming what proves the untouched thing stayed untouched; done means, as artefacts, not the worker's say-so.
 
-Key elements:
-- **Current verified state.** What is true right now, checked against the
-  system rather than recalled. What exists, what is already done, what is
-  known-broken.
-- **Context the receiver does not have.** Why this exists, what it connects
-  to, what a newcomer would misread. Write for zero shared history.
-- **Exact resources.** Full paths, complete URLs, exact IDs and account
-  names. Not "the config", not "the usual folder", not "the dashboard".
-- **Scope fence.** What to do, and what not to touch. For delegated work,
-  name the evidence that proves the untouched thing stayed untouched.
-- **Done means.** The deliverable, its format, where it goes, and what
-  proof comes with it. Defined as artefacts, never as the worker's say-so.
+Design notes: put in anything you know or could look up in thirty seconds; verify state claims, don't recall them; names beat descriptions; "don't touch X" without "prove X is untouched" is a hope, not a control; ask upfront: full handoff or scoped subtask?
 
-Design notes:
-- **If you know it, or could look it up in thirty seconds, put it in.**
-  "Find the repo URL yourself" saves the sender thirty seconds and costs
-  every receiver twenty minutes, forever.
-- **Verify each state claim before sending.** The expensive defect is not a
-  missing fact, it is a confidently wrong one. A brief once asserted four
-  items were adopted when eleven were on disk, and the receiving session's
-  conclusions inherited the wrong count.
-- **Names beat descriptions.** Descriptions drift, names do not.
-- **Instructions are not controls.** "Do not touch X" without "prove X is
-  untouched" is a hope.
-- Keep it tight anyway: a handoff that says to read every session note
-  defeats the purpose.
-- Tags like `<current_state>`, `<outstanding_work>`, `<context>` and
-  `<your_task>` help here specifically, because the receiver needs to
-  locate sections rather than read prose end to end.
-- Ask first: full project handoff or scoped subtask? Different amounts of
-  context.
+### Deep research prompt
 
-### Deep Research Prompt
+Sharpening rough rationale into a structured research prompt.
 
-Used when starting a serious investigation and wanting rough rationale sharpened into a structured research prompt.
+Key elements: a specific research question (the most common gap to fix); rationale; output type; depth guidance; how to handle gaps or uncertainty.
 
-Key elements to include:
-- Research question (specific, not open-ended; the most common gap to fix)
-- Rationale or angle (why this matters, what you already believe or suspect)
-- Output type (synthesis, comparison, gap analysis, recommendations, raw findings)
-- Depth guidance (broad survey vs deep dive into one area)
-- How to handle gaps or uncertainty
+Design notes: turn the vague topic into a pointed question first, usually the highest-value edit; recommend high effort where exposed; include a no-fabrication rule and a flag-uncertainty instruction; add source guidance if sources matter.
 
-Design notes:
-- Turn the vague topic into a pointed question first; this is usually the highest-value edit
-- Recommend a high effort level where the target exposes one; research is the case that repays it
-- Always include a no-fabrication rule and instruct the model to flag uncertainty explicitly
-- If sources matter, add guidance on what to prioritise or avoid
+### Kickoff / build prompt
 
-### Kickoff / Build Prompt
+Starting something new: a document, design brief, plan, feature, or creative piece.
 
-Used when starting something new: a document, design brief, plan, feature, or creative piece.
+Key elements: what's being built and for whom; project context; style/tone/format constraints; what done looks like; explicit exclusions.
 
-Key elements to include:
-- What is being built and for whom
-- Project or product context the model needs
-- Style, tone, or format constraints
-- What done looks like (the deliverable)
-- What not to do (explicit exclusions)
+Design notes: decide upfront whether to invite clarifying questions or dive straight in; for creative work include a brief style reference; for technical builds state the stack or prior art.
 
-Design notes:
-- Decide upfront whether the prompt should invite clarifying questions or dive straight in; ask if unclear
-- For creative work, include a brief example or reference that captures the desired style
-- For technical builds, state the stack, conventions, or prior art explicitly
+## Agentic Prompts
 
-## Context Engineering Note
+For agentic-tier prompts, context (memory, tool results, documents, past decisions) often matters more than wording. Surface whether it's adequate before finalising; flag it, don't architect the system.
 
-For agentic-tier prompts, prompt wording is often less important than what context the model has access to: prior memory, tool results, documents, past decisions. Before finalising an agentic prompt, surface whether the context design (what information is fed in) is adequate. A well-structured prompt in a thin context still fails.
+An orchestrator prompt must also include: when to delegate versus handle inline, each sub-agent's scope and goal, stop/handoff conditions, and what to do with the output.
 
-This is the prompt-writer's scope boundary: flag the question, do not architect the system.
+Two things matter more:
 
-## Sub-Agents (Agentic Mode)
+- **The sub-agent starts blind, and usually can't ask.** Put everything it needs in the prompt: the one place where more explicit is better.
+- **Current models over-delegate**, so the prompt needs a ceiling, not encouragement: every sub-agent re-establishes context and reports back, real repeating overhead. Delegate only where work is genuinely independent and sizeable, and commit to its findings rather than re-deriving them.
 
-When writing an orchestrator prompt, the prompt must include criteria for sub-agent use:
-
-- when to delegate (what triggers a sub-agent vs handling inline)
-- what scope and goal each sub-agent gets
-- stop and handoff conditions
-- what the orchestrator does with sub-agent output
-
-Two things matter more than that list, and are the usual reason delegation goes wrong:
-
-- **The sub-agent starts blind, and usually cannot ask.** It does not share the orchestrator's context, conversation, or working assumptions. Some harnesses can message a running sub-agent; most cannot, and none of them make it easy. Assume ambiguity a person would resolve in one exchange becomes a silent wrong turn instead, and put everything it needs in its prompt. This is the one place where more explicit is reliably better.
-- **Current models over-delegate, so orchestrator prompts usually need a ceiling rather than encouragement.** Every sub-agent re-establishes context, re-explores, reports back, and the orchestrator then re-reads the report; that overhead is real and it repeats. Write the prompt to delegate only where the work is genuinely independent and sizeable, to keep spawn counts low, and to commit to a sub-agent's findings rather than re-deriving them. Verification belongs in the orchestrator's own loop, not in a spawned checker.
-
-If your workspace has multi-agent conventions, reference them here rather than re-documenting them in the prompt itself.
+If the workspace has multi-agent conventions, reference them here rather than re-documenting them in the prompt.
 
 ## Output Rules
 
 1. Wrap each final prompt in triple backticks.
 2. Keep commentary outside the prompt block.
-3. Keep prompt-design notes concise and focused on decisions that materially change behaviour.
-4. After delivering a prompt, invite iteration with a short follow-up.
-5. Length is governed by signal density, not a character count. Cut what does not change behaviour, then stop. There is no model-side length limit worth designing around, and a numeric cap starves reasoning on hard tasks.
-6. Check the destination for a hard input limit before delivering. Slash-command fields, form inputs, and some agent-config surfaces either reject or silently truncate, and a correct prompt that gets clipped is worse than a shorter one. Where a limit applies to a surface used often, record the number in the guidance section below rather than generalising it into a rule.
-
-## Safety And Scope
-
-Encourage prompts to include:
-
-- explicit scope limits
-- definition of done
-- exclusions
-- no-fabrication rules where accuracy matters
-- output structure that can be checked quickly
+3. Keep design notes concise and focused on decisions that materially change behaviour.
+4. After delivering, invite iteration with a short follow-up.
+5. Length follows signal density, not a character count. Cut what doesn't change behaviour, then stop.
+6. Check the destination for a hard input limit. Some surfaces reject over-length input outright, others silently truncate it; truncation is the dangerous one.
+7. Encourage scope limits, a definition of done, exclusions, no-fabrication rules where accuracy matters, and output structure that can be checked quickly.
 
 ## Company / Product Guidance
 
-Customize this section for your own context. Add your product terminology, internal roles, object names, workflows, and APIs so the skill produces prompts that fit your reality rather than generic ones.
-
-Example entries:
-- "Our product is called [X]. Key objects are [Y] and [Z]."
-- "Default audience is [role]. Tone should be [description]."
-- "Flag any assumptions about internal systems outside the prompt block."
+Customise this section with your own product terminology, roles, object names, workflows, and APIs, so prompts fit your reality. Example: "Our product is [X]; key objects are [Y] and [Z]; default audience is [role]; tone is [description]."
 
 ## What Not To Do
 
-- do not answer the prompt instead of refining it
-- do not research the user's underlying topic unless they explicitly switch away from prompt-design mode
-- do not overcomplicate simple asks with unnecessary prompt engineering jargon
-- do not ask a long list of clarification questions when a clean first draft is good enough
-- do not add chain-of-thought scaffolding: current models reason internally, and it competes with that
-- do not write a frontier-model prompt as a step-by-step script; state the goal and the constraints instead
-- do not hardcode model version names into a prompt or a skill unless the behaviour genuinely differs by version
+- Don't overcomplicate simple asks with unnecessary prompt-engineering jargon.
+- Don't ask a long list of clarification questions when a clean first draft is good enough.
