@@ -6,6 +6,16 @@ It transcribes locally, picks the moments worth seeing, extracts only those fram
 
 See [the worked example](example/) and [the report it produces](example/report.md) before installing anything.
 
+## Known limits
+
+- Local video files only.
+- It costs real tokens: a 17-minute walkthrough is about 135k visual tokens at default effort. The first step prints the estimate before anything is spent.
+- Very small text changes fall below the visual threshold. Anything said out loud is still caught.
+- Whisper mishears product names ("Smooth Matte" came back as "smooth Mac"), and its timings drift. The skill checks odd nouns against the frame; read proper nouns with suspicion anyway.
+- Only the defect log has been validated on real footage. Runbooks and footage notes use the same machinery and are less tested.
+- macOS screen-recording filenames contain a narrow no-break space before "pm", so a retyped path fails. Glob the name instead.
+
+
 ## First run
 
 1. Copy this folder into your `skills/`, plus [`tools/transcription/`](../../tools/transcription/) and [`tools/video-frames/`](../../tools/video-frames/).
@@ -65,9 +75,9 @@ flowchart TD
     I --> J["report.md"]
 ```
 
-The bundled tools have no network path and no telemetry; `grep -rnoE 'https?://' tools/` returns only documentation links and package sources. Three things reach your model: transcript text (all of it, if you use the transcription tool's optional cleanup pass), the mapped frames (on one 17-minute walkthrough, 28 of 96 extracted), and whatever the resolve step reads.
+The bundled tools have no network path and no telemetry; `grep -rnoE 'https?://' tools/` returns only documentation links and package sources. Three things reach your model: the full transcript (the cue pass reads all of it, as does the optional cleanup pass), the mapped frames (on one 17-minute walkthrough, 28 of 96 extracted), and whatever the resolve step reads.
 
-- **Cloud-assisted**, which is what most people run: assume anything visible in a cited frame has been sent. Crop or avoid customer data and credentials on screen.
+- **Cloud-assisted**, which is what most people run: assume anything said aloud, and anything visible in a cited frame, has been sent. Crop or avoid customer data and credentials on screen.
 - **Fully local**, with a local vision model: nothing leaves the machine except the queries the resolve step sends to systems you point it at, and those can carry values read off the recording, such as an order number.
 
 First-time setup downloads ffmpeg, whisper.cpp and a model file. Nothing you process afterwards is uploaded by the tools.
@@ -81,15 +91,6 @@ First-time setup downloads ffmpeg, whisper.cpp and a model file. Nothing you pro
 | Mapping | You read the whole folder: about 167k visual tokens instead of 49k on a real run |
 | Access to the system | Items can be written, but most are blocked |
 | **Vision** | **Nothing can be checked against a frame.** The output looks like a defect log and isn't one |
-
-## Known limits
-
-- Local video files only.
-- It costs real tokens: a 17-minute walkthrough is about 135k visual tokens at default effort. The first step prints the estimate before anything is spent.
-- Very small text changes fall below the visual threshold. Anything said out loud is still caught.
-- Whisper mishears product names ("Smooth Matte" came back as "smooth Mac"), and its timings drift. The skill checks odd nouns against the frame; read proper nouns with suspicion anyway.
-- Only the defect log has been validated on real footage. Runbooks and footage notes use the same machinery and are less tested.
-- macOS screen-recording filenames contain a narrow no-break space before "pm", so a retyped path fails. Glob the name instead.
 
 ## Customise it
 

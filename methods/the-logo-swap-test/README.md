@@ -48,7 +48,7 @@ features some genres own.
 | Dev tool | Dark theme, mono | Authentic states, density? |
 | Design system | Tokens, specimens | System's own language? |
 
-A specimen page is excluded entirely, meant to look like its own
+Leave out specimen pages entirely: they're meant to show a system's own
 defaults.
 
 ## Don't score it
@@ -67,7 +67,7 @@ by a different model family plus a person.
 When the target plausibly matches the auditing model's own style: say so,
 drop confidence, mark any Clean verdict provisional.
 
-Escalate only when the decision matters, the verdict is disputed, or an
+Escalate only when the decision matters, the verdict is disputed, or a likely
 own-family design came back Clean; otherwise, naming the blind spot is
 enough.
 

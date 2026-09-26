@@ -36,8 +36,8 @@ do). Read it from the source, or tell me you couldn't.**
 Why: both read like the real thing.
 
 **"It isn't there" needs evidence too. One failed search is not proof of
-absence. Before trusting a negative, run the same check on something you
-know is there.**
+absence. Before trusting a negative, run the same check, in the same
+place, on something you know is there.**
 
 Why: a broken search and a true absence look identical; a known positive
 is how you tell them apart.

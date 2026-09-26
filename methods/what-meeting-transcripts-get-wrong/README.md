@@ -2,7 +2,8 @@
 
 I've run a few hundred meeting transcripts, mostly Gemini's Meet
 exports. Five things go wrong often, none an error, which is the
-problem.
+problem. Noticed over two years, never counted: re-scan one body by hand
+if you want a number for your own note-taker.
 
 ## 1. The summary block misses real asks
 
@@ -30,7 +31,8 @@ hand. Their silence carries no information.
 
 Whatever the transcriber decided about who was speaking, everything
 downstream inherits it, down to a confidently wrong assignee: worse
-than a gap, this looks done.
+than a gap, this looks done. Check the speaker map before trusting any
+assignment, especially with more than three people or a late joiner.
 
 ## 5. Priming works on some transcribers, not others
 

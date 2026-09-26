@@ -17,7 +17,7 @@ Exception: someone newer to prompting may want a tighter leash. Give them the st
 
 Never answer, research, summarise, code, or complete the user's real task when this skill is active.
 
-Only return: a prompt, a prompt set, a prompt workflow, or brief notes explaining prompt-design choices when useful.
+Only return: a prompt, a prompt set, a prompt workflow, or brief notes explaining prompt-design choices when useful. If the request doesn't need a prompt (see above), say so rather than producing one.
 
 ## Operating Modes
 
@@ -42,7 +42,7 @@ Complexity describes the task; this describes who runs it, and changes the draft
 |---|---|
 | **Frontier, interactive** | Goal, constraints, done-when. No step-by-step scripts: its own plan beats a hand-written one. |
 | **Frontier, one-shot / unattended** | Same, plus stop conditions, exclusions, what "done" means. No second turn: close the exits instead of scripting the route. |
-| **Sub-agent** (fresh context) | Explicit to the point of redundancy; starts from the prompt and little else, won't generalise a one-case instruction. Every path, input, constraint, output shape goes in. Most can't ask mid-run: write as though the prompt is the only turn. |
+| **Sub-agent** (fresh context) | Explicit to the point of redundancy; starts from the prompt and little else, won't generalise a one-case instruction. Every path, input, constraint, output shape goes in. Most can't ask mid-run (check whether yours can): write as though the prompt is the only turn. |
 | **External system** (another vendor's model, hosted research/agent product) | One pointed question, sources to prefer or avoid, the output shape wanted, how to handle uncertainty. One shot, no visibility in. |
 
 Over-specifying a frontier model costs quality; under-specifying a sub-agent or external system costs the run. Executor unstated, tier Structured or above: ask.
@@ -88,7 +88,7 @@ Wrapping up a session in a clean context window; also a contractor handoff, or a
 
 Key elements: current state, verified against the system not recalled; context the receiver doesn't have; exact resources (full paths, URLs, IDs); a scope fence naming what proves the untouched thing stayed untouched; done means, as artefacts, not the worker's say-so.
 
-Design notes: put in anything you know or could look up in thirty seconds; verify state claims, don't recall them; names beat descriptions; "don't touch X" without "prove X is untouched" is a hope, not a control; ask upfront: full handoff or scoped subtask?
+Design notes: put in anything you know or could look up in thirty seconds; verify state claims, don't recall them; names beat descriptions; "don't touch X" without "prove X is untouched" is a hope, not a control; ask upfront: full handoff or scoped subtask? Keep it tight anyway: a handoff that tells the receiver to read every note it can find defeats the purpose.
 
 ### Deep research prompt
 
@@ -115,7 +115,7 @@ An orchestrator prompt must also include: when to delegate versus handle inline,
 Two things matter more:
 
 - **The sub-agent starts blind, and usually can't ask.** Put everything it needs in the prompt: the one place where more explicit is better.
-- **Current models over-delegate**, so the prompt needs a ceiling, not encouragement: every sub-agent re-establishes context and reports back, real repeating overhead. Delegate only where work is genuinely independent and sizeable, and commit to its findings rather than re-deriving them.
+- **Current models over-delegate**, so the prompt needs a ceiling, not encouragement: every sub-agent re-establishes context and reports back, real repeating overhead. Delegate only where work is genuinely independent and sizeable, and commit to its findings rather than re-deriving them. Keep spawn counts low, and keep verification in the orchestrator's own loop rather than in a spawned checker.
 
 If the workspace has multi-agent conventions, reference them here rather than re-documenting them in the prompt.
 
@@ -126,7 +126,7 @@ If the workspace has multi-agent conventions, reference them here rather than re
 3. Keep design notes concise and focused on decisions that materially change behaviour.
 4. After delivering, invite iteration with a short follow-up.
 5. Length follows signal density, not a character count. Cut what doesn't change behaviour, then stop.
-6. Check the destination for a hard input limit. Some surfaces reject over-length input outright, others silently truncate it; truncation is the dangerous one.
+6. Check the destination for a hard input limit. Some surfaces reject over-length input outright, others silently truncate it; truncation is the dangerous one. Record a known limit in the guidance section below.
 7. Encourage scope limits, a definition of done, exclusions, no-fabrication rules where accuracy matters, and output structure that can be checked quickly.
 
 ## Company / Product Guidance

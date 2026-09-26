@@ -10,7 +10,6 @@ It has no network path. Driven by [`skills/video-review/`](../../skills/video-re
 - Very small text edits fall below the visual threshold. Cues catch anything said out loud.
 - ffmpeg's scene filter is built for hard cuts and barely fires on gradual change, so on much screen content the uniform top-up and deduplication do the real work.
 - Cue timing inherits whisper's drift of about half a second. Frames carry their real `ffprobe` timestamp, so a mis-timed cue shows on inspection.
-- `--effort large` and `average` behave the same on recordings under about ten minutes at the default cap. The dial matters on long recordings.
 - The token estimate is an upper bound. Spend comes in under it whenever the screen sits still.
 - JPEG output only, at `-q:v 2`: fine for UI, not for photographic detail.
 

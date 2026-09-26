@@ -8,7 +8,7 @@ Why this skill and its two tools are shaped the way they are. The measurements c
 
 Claude has no native video input: the Messages API accepts `image`, `text` and `document` blocks, and animated GIFs are flattened to their first frame. So every tool in this space does the same thing underneath: extract frames with ffmpeg, build a transcript, pass frames in as images. What differs is **which frames get chosen, and what the tool drags in with it.**
 
-Four existing projects were reviewed before building. The checks that ruled candidates out are reusable against anything in this space:
+Four existing projects were reviewed before building. Two are named below; the other two are left unnamed, and the checks that ruled them out are the reusable part:
 
 - **Does it load when you didn't ask?** An always-on session hook puts it in every context.
 - **Where does the audio go?** Several tools that read as local send audio to a hosted transcription API.
@@ -98,7 +98,7 @@ One narrated claim, that paid add-ons were missing from an order summary, was co
 
 ## 10. The write-up stage needed its own steps
 
-On the second real run the capture half held and the document didn't: it took four rewrites, and four items reached a sent document before being withdrawn. In each, the observation was right and the consequence was invented, and each was answerable from code or a query already in reach.
+On the second real run the capture half held and the document didn't: four items reached a sent document and were withdrawn. In each, the observation was right and the consequence was invented, and each was answerable from code or a query already in reach.
 
 The cause was structural. Seven of the loop's eight steps gathered evidence; writing was one step with four sentences of guidance. So:
 
@@ -106,7 +106,7 @@ The cause was structural. Seven of the loop's eight steps gathered evidence; wri
 - **The defect-log spec described the recording** (timestamp, frame, what was said, what was visible) and nothing about the system. It's now error, location down to `file:line`, fix and owner, with a stand-alone test.
 - **Smaller changes from the same run:** structure by product area, because ownership changes at area boundaries; the reviewer's priority order asked for at step 0; and narration outranks frames when they conflict. The run's worst error overrode someone's description of their own screen on one frame; re-extracting showed both things they'd described, twelve seconds apart. Together with section 9, that is the rule: never settle a conflict on one frame.
 
-A separate write-up skill was considered and rejected: the write-up needs the frames, the transcript and the difference between them, which is what a handoff loses. The worked example was rebuilt at the same time around a stub app, so it shows items being resolved rather than gaps being declared. The rebuilt stage has since been used on two more real walkthroughs, of 4 and 5 minutes.
+A separate write-up skill was considered and rejected: the write-up needs the frames, the transcript and the difference between them, which is what a handoff loses. The worked example was rebuilt at the same time around a stub app, so it shows items being resolved rather than gaps being declared. The rebuilt stage has since been used on two more real walkthroughs.
 
 ## 11. Not built, on purpose
 

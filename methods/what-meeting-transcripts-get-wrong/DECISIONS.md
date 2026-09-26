@@ -9,14 +9,12 @@ stranger shouldn't adopt: config needed first, one export shape
 assumed, nothing ever marked done. The machinery stayed home; the
 findings got published. That's why `methods/` exists.
 
-## The headline claim got weaker on the way out, twice
+## Noticed, not measured, and named
 
-The internal version said one tool's next-steps block "routinely misses
-20-50% of actual asks." The public version generalised that to
-auto-transcribers as a class, and it was never counted, only an
-impression from repeated use. Both moves were wrong, so the published
-version names the tool, says noticed rather than measured, and lets the
-reader check their own note-taker instead of trusting my number.
+The findings come from one tool's exports and were never counted, so the
+piece names the tool, says noticed rather than measured, and gives no
+percentage. A reader checks their own note-taker instead of trusting a
+number that was only ever an impression.
 
 ## Five findings, not seven, not four
 

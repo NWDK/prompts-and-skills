@@ -24,8 +24,9 @@ to stakes, the counterweight to a document of obligations.
 Evidence discipline, multi-agent conventions, and briefing an agent well:
 each is a craft, not a property of the relationship. The same test left
 out phrasing new rules as guidelines rather than hard bans (it governs
-writing rules, not the assistant's behaviour) and two rules against
-blocking a build on a missing test case or an unrequested feature. One
+writing rules, not the assistant's behaviour) a rule against
+blocking a build on a missing test case, and asking once before building an
+unrequested feature (both craft rules). One
 idea lives in one place; two copies drift and the reader inherits the
 argument.
 
@@ -55,7 +56,6 @@ aren't printed: they differ by host and plan, and already moved once.
 What's printed is our file's measured size, which can't date, plus the cut
 order. The README links to the block rather than reproduce it: one extra
 click beats two copies drifting apart.
-
 
 ## The claim I removed
 

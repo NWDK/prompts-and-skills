@@ -29,6 +29,10 @@ ship, every time, against the staged diff, not the working tree.
   copy one doc-to-doc.
 - **Check licences and adapted material**: anything adapted from someone
   else's work keeps their licence terms and credits them with a link.
+- **Strip embedded file metadata**: images and documents carry authors,
+  locations and edit history (EXIF, document properties).
+- **Check what shipped code does on the network**: grep for URLs and
+  network calls; each one should be documented.
 
 ## Things that resolve for you and not for anyone else
 

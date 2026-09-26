@@ -22,15 +22,15 @@ serves? It runs first because it's allowed to make changes: verifying
 intent reworks the thing, so rework happens before the passes that check
 it. A structural check verifies wiring, never truth.
 
-## Gate 2: independent QA. Fresh eyes, and no pen
+## Gate 2: independent QA. Fresh eyes, no approval to write
 
 A second pass, in a fresh session, checking against everything that has
 to hold true.
 
 **It runs separately** (self-check is what this prevents), and **it
-doesn't write the approval**: a tick to produce is a stake in passing. It
-can fix what it found once recorded, but a fresh session re-checks the
-fix. Clearance is version-tied; any change voids it.
+doesn't write the approval**: a tick to produce is a stake in passing. Once its full
+verdict is written and delivered, and the owner says go, it may fix what
+it found; a fresh session re-checks the fix. Clearance is version-tied; any change voids it.
 
 ## Gate 3: mechanical. Does it actually do the thing?
 
@@ -69,7 +69,7 @@ approved** components found defects in all four.
 The fourth was held back for its own QA, the only reason anyone caught
 it, already live in three places. Approval had gone out first.
 
-## Cost, honestly
+## Cost
 
 This doesn't add a step if you were already doing QA: it moves approval
 to the end, so a finding blocks it, instead of arriving after.

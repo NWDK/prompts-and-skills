@@ -41,7 +41,7 @@ Start from [`glossaries/_template.txt`](glossaries/_template.txt). **Add only sp
 ## Two stages
 
 1. **Whisper**: audio to text, primed as above. Fast, local, and wrong about names it has never heard.
-2. **Cleanup by your model**: hand back the `.txt` with the full glossary and ask it to correct names from context. There's no 200-word limit here, so a long glossary pays off. The transcript goes to your model's provider at this stage. The script prints a reminder when it finishes.
+2. **Cleanup by your model**: hand back the `.txt` with the full glossary and ask it to correct names from context. There's no 200-word limit here, so a long glossary pays off. The transcript goes to your model's provider at this stage. The script's closing message suggests this step.
 
 ## Defaults
 

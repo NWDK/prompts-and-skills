@@ -40,7 +40,7 @@ Ask two things if the request does not make them obvious: **which document**, an
 | **Runbook** | Recording how something is done | Prerequisites, ordered steps, values typed, what breaks if skipped, how to tell it worked |
 | **Footage notes** | Interview or marketing material | Quotable lines with in/out timecodes, delivery quality, what is usable |
 
-Only the defect log has been validated on real footage. The other two are less tested, and the extractor is tuned for screen recordings rather than filmed people, so check their output more closely.
+Only the defect log has been validated on real footage. The other two are less tested, and the extractor is tuned for screen recordings rather than filmed people, so check their output more closely and say so when you hand it over.
 
 ## What your setup needs
 
@@ -118,7 +118,7 @@ python3 "$VF/extract.py" extract "$VIDEO" \
   --out "$FRAMES" --transcript "$SRT" --cues "$CUES" --effort average
 ```
 
-Cue frames are pinned and survive deduplication; the sweep catches anything done silently. Effort never reduces cues, so `--effort small` is safe when the narration carries the work. `manifest.json` is the contract: each entry has its real timestamp, its source (cue or sweep) and the line spoken over it. **Entries can share one file** when the screen did not change; send each image once.
+Cue frames are pinned and survive deduplication; the sweep catches anything done silently. Effort never reduces cues, so `--effort small` is safe when the narration carries the work. `manifest.json` is the contract: each entry has its real timestamp, its source (cue or sweep) and the line spoken over it. **Entries can share one file** when the screen did not change; send each image once and attach every timestamp to it.
 
 ### 5. Map findings to frames before reading any
 
@@ -138,7 +138,7 @@ A frame shows a symptom. The cause sits in the code, config, data or an admin sc
 
 **Stopping rule:** you have looked when you can name the mechanism, or the specific thing you tried that did not answer it. Having a frame is not having looked.
 
-**Stay inside the access you were given**, even where the person running the review could reach further. With no access at all, the step still runs: every item gets a box, and most are blocked with the missing access named.
+**Resolve reads; it never changes the system under review.** Stay inside the access you were given, even where the person running the review could reach further. With no access at all, the step still runs: every item gets a box, and most are blocked with the missing access named.
 
 ### 7. Write
 

@@ -1,6 +1,6 @@
 ---
 name: oss-check
-description: Decide whether to ADOPT, VENDOR, STEAL-THE-PATTERN, PARK, or SKIP an external open-source project, skill, plugin, or MCP server. Reads the source, the package registry, the licence file and the push date rather than the README. Domain maturity caps the verdict but never cancels the search. Also hunts for candidates before you build something that smells solved. Load when handed a repo link, before installing any MCP server, skill, plugin or dependency, or when about to build from a blank page on a solved problem.
+description: Decide whether to ADOPT, VENDOR, STEAL-THE-PATTERN, PARK, or SKIP an external open-source project, skill, plugin, or MCP server. Reads the source, the package registry, the licence file and the push date rather than the README. Domain maturity limits how you depend on something, never whether you search. Also hunts for candidates before you build something that smells solved. Load when handed a repo link, before installing any MCP server, skill, plugin or dependency, or when about to build from a blank page on a solved problem.
 ---
 
 # OSS Check: Adopt, Vendor, Steal, Or Skip
@@ -11,7 +11,7 @@ Read the source, the package registry, the licence file and the push date before
 
 Output is **a verdict with receipts**. This skill installs nothing, adds no dependency and changes no config, not even to try the thing: trying it is adoption. Adoption is a separate, human-approved step.
 
-> Known limits: two gaps in Mode 2, a live caveat on search bias. Read [`README.md`](README.md#known-limits) before relying on the hunt mode.
+> Known limits, including that Mode 2's spec-first path is untested: [`README.md`](README.md#known-limits).
 
 ## When To Use
 
@@ -29,10 +29,8 @@ Do **not** run the full procedure for inert reference material (a research doc, 
 
 **Before any search, clone, or API call: read your register** (start one from [`register-template.md`](register-template.md) if you don't have one).
 
-- **Vetting a named candidate?** Search the **Repo** column. A hit means you decided already: read the reason and revisit trigger, stop.
+- **Vetting a named candidate?** Search the **Repo** column. A hit means you decided already: read the reason. If its revisit trigger has fired, re-vet and update the row; otherwise stop.
 - **Hunting?** Search the **Area** column.
-
-If a SKIP's revisit trigger has fired, re-vet and update the row.
 
 ## Step 0b: The Maturity Call
 
@@ -44,7 +42,7 @@ Maturity decides how you take something, not whether you look.
 | Source actually read and clean, at any age | **VENDOR**: a copy frozen at a named commit, reviewed when you bump it. |
 | Not read, or too large to read end to end | **STEAL-THE-PATTERN**: read what you can, take the parts, depend on nothing. |
 
-Once Phase 3 has read the source, age and bus factor stop mattering: the risk is in the bytes you read, not who wrote them. Keep the maturity brake at full strength for anything that ships inside a product you sell.
+Once Phase 3 has read the source, age and bus factor stop mattering: the risk is in the bytes you read, not who wrote them. Keep the maturity brake at full strength for anything that ships inside your product.
 
 **The context gate (Phase 3B) never relaxes with maturity.** An unpinned install (`npx skills add`, `@latest`, a floating clone) lets a stranger's markdown reach your context without review, and a large old project has *more* people who can push into what you auto-pull, not fewer (the xz backdoor rode in through a mature, signed, distro-blessed release). Pin, or do not take it.
 
@@ -62,7 +60,7 @@ Every evaluation ends in exactly one of five words:
 |---|---|
 | **ADOPT** | Install and depend on it. Clean pass on every gate below. |
 | **VENDOR** | Copy the code under your own control: useful-but-unmaintained projects, or a licence you can't depend on live (AGPL in a product path). |
-| **STEAL-THE-PATTERN** | Read the source, write your own. Default for anything young, churny, licence-hostile, or context-injecting. |
+| **STEAL-THE-PATTERN** | Read the source, write your own. Default when the source isn't read, or the project is churny, licence-hostile, or context-injecting. |
 | **PARK** | Good work, not useful now. Needs a real area and a real revisit trigger, or it's a SKIP. |
 | **SKIP** | You decided against it. |
 
@@ -74,7 +72,7 @@ Expect STEAL-THE-PATTERN as the norm, ADOPT as rare. Index a SKIP in the registe
 
 ## GATE-A: Never Probe With Real IP
 
-If evaluating means calling the candidate's hosted service, use a deliberately generic input. Never send real product ideas, strategy, customer data, unreleased plans, or personal information to an endpoint you're in the middle of deciding not to trust.
+If evaluating means calling the candidate's hosted service, use a deliberately generic input. Never send real product ideas, strategy, customer data, unreleased plans, or personal information to an endpoint you're in the middle of deciding not to trust. The same goes for search queries: search in the domain's generic words, never your unreleased idea.
 
 ## Phase 1: Identify The Artifact That Actually Installs
 
@@ -230,7 +228,7 @@ This is the *sweep → vet → adapt* loop: search broadly, vet what looks promi
 
 ## Phase 2: Maturity Call Per Component
 
-Apply Step 0b to each component before searching. A young domain's ceiling is STEAL-THE-PATTERN: still search and report what exists, recommending depending on none of it. Never return an empty list for a component; "nothing worth depending on" and "nothing worth reading" are different findings.
+Apply Step 0b to each component before searching. In a young domain, expect STEAL-THE-PATTERN unless a clean source read earns VENDOR: still search and report what exists. Never return an empty list for a component; "nothing worth depending on" and "nothing worth reading" are different findings.
 
 ## Phase 3: Candidates With Live Metadata
 

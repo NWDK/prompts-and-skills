@@ -23,15 +23,15 @@ breaks?* If the answer is "the plan," triangulate it.
 
 ## Ask for it, and check what comes back
 
-No setup needed:
+First check the source itself survived: an exported report can read
+complete after a chart or formula carrying the number was lost in
+conversion. Then, no setup needed:
 
 > Before we build on that, treat it as a load-bearing fact. Find two
 > independent sources for it, tell me what they are, and tell me if you
 > can't.
 
 Without that last clause you get two sources whether or not two exist.
-Check the number too: an export can read complete while the actual
-figure, once a chart, is gone.
 
 ## What "independent" actually means
 

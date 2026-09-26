@@ -35,7 +35,6 @@ it, mark it, keep it soft.
 ## The worked example is sanitised, and checked
 
 Real: a ratio pulled mid-trend from a dashboard, published without the
-company, product, platform or figures. A draft said the real figure was
-"different by roughly ten times", me rounding a number for effect in a
-piece about not doing that. It now says "a small fraction", true and
-defensible.
+company, product, platform or figures. The gap is described as "a small
+fraction", not a rounded multiple, because a piece about unchecked numbers
+can't round one for effect.

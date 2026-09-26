@@ -8,7 +8,7 @@ Most of what got called prompt engineering has stopped paying: current models do
 
 It earns its keep where correcting it isn't available: a handoff to a fresh context, a sub-agent brief, an unattended or one-shot run, or a deep-research prompt where you don't see the middle. Not one of those? You probably don't need it.
 
-Newer to prompting? Start structured and loosen once you trust the model; the executor table is the part to loosen first.
+Newer to prompting? Start structured and loosen once you trust the model.
 
 ## Known limits
 

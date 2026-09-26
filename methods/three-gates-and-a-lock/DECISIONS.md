@@ -17,9 +17,10 @@ nothing.
 ## QA stays read-only about approval, not fixing
 
 Letting QA fix what it finds is the obvious efficiency, rejected first:
-a pass with an approval to produce has a stake in passing. Once a
-finding is recorded it has nothing left to protect, so it may fix it,
-with a fresh session re-checking.
+a pass with an approval to produce has a stake in passing. Once its
+full verdict is written and delivered it has nothing left to protect, so
+it may fix what it found, on the owner's go, with a fresh session
+re-checking.
 
 ## Reopening needs an external reason
 

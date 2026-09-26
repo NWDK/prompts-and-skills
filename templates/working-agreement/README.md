@@ -10,8 +10,14 @@ Copy the block in [`SHORT-VERSION.md`](SHORT-VERSION.md) into your
 assistant's standing instructions and replace the "My style" line with your
 own preferences.
 
-It's 1,430 characters, sized for the smaller settings fields.
+It's 1,487 characters, sized for the smaller settings fields.
 `SHORT-VERSION.md` says what to cut if yours won't take it.
+
+## Known limits
+
+- Tested only inside a setup already running these rules, never pasted cold with nothing else supporting it.
+- Clauses only help if you enforce them: an assistant that breaks one won't notice on its own.
+- Some hosts cap the standing-instructions field below this length. `SHORT-VERSION.md` gives a cut order.
 
 ## Why
 
