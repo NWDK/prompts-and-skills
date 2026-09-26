@@ -76,4 +76,4 @@ to the end, so a finding blocks it, instead of arriving after.
 
 ## Feedback
 
-If it fails differently for you: [open an issue](../../issues).
+If it fails differently for you: [open an issue](https://github.com/NWDK/prompts-and-skills/issues).

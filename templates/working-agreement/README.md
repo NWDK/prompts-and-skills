@@ -32,4 +32,4 @@ I chose and rejected building it.
 ## Feedback
 
 Take it, change it, ignore what doesn't fit. If a clause misfires or misses
-something you keep hitting, [open an issue](../../issues).
+something you keep hitting, [open an issue](https://github.com/NWDK/prompts-and-skills/issues).

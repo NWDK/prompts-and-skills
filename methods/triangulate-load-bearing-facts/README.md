@@ -66,4 +66,4 @@ not whether reports agree. A shared lineage isn't corroboration.
 
 ## Feedback
 
-If this misfires, [open an issue](../../issues).
+If this misfires, [open an issue](https://github.com/NWDK/prompts-and-skills/issues).

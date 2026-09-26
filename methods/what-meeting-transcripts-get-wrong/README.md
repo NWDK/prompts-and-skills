@@ -50,4 +50,4 @@ setup and never marking anything done.
 
 ## Feedback
 
-If yours fails differently: [open an issue](../../issues).
+If yours fails differently: [open an issue](https://github.com/NWDK/prompts-and-skills/issues).

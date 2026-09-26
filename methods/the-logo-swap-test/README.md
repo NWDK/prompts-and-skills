@@ -78,4 +78,4 @@ Whether the design is good. This finds unexamined defaults, not quality.
 ## Feedback
 
 If a genre control misfires or you find a class this misses:
-[open an issue](../../issues).
+[open an issue](https://github.com/NWDK/prompts-and-skills/issues).
