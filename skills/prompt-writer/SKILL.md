@@ -86,7 +86,7 @@ Wrapping up a session in a clean context window; also a contractor handoff, or a
 
 **Test:** could a cold stranger act on this without asking or looking anything up? An unstated resource becomes a wrong turn or a stale assumption, silently and fast with an agent.
 
-Key elements: current state, verified against the system not recalled; context the receiver doesn't have; exact resources (full paths, URLs, IDs); a scope fence naming what proves the untouched thing stayed untouched; done means, as artefacts, not the worker's say-so.
+Key elements: current state, verified against the system not recalled; context the receiver doesn't have; exact resources (full paths, URLs, IDs); a scope fence naming what proves the untouched thing stayed untouched; done means, as artefacts, not the worker's say-so; the first move, so the receiver starts working instead of re-planning.
 
 Design notes: put in anything you know or could look up in thirty seconds; verify state claims, don't recall them; names beat descriptions; "don't touch X" without "prove X is untouched" is a hope, not a control; ask upfront: full handoff or scoped subtask? Keep it tight anyway: a handoff that tells the receiver to read every note it can find defeats the purpose.
 
