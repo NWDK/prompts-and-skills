@@ -95,7 +95,7 @@ gh api users/OWNER/repos --jq '.[] | "\(.name)\tstars=\(.stargazers_count)\tpush
 
 - **`pushed_at` first.** A 22k-star repo last pushed ten months ago is dead; stars are historical, push date is the liveness signal.
 - **Watchers over stars.** Healthy is roughly 2–10% of the star count; well under 1% on a young repo is a signal, not proof.
-- **Bus factor.** One dominant author is a single point of failure whatever the star count says.
+- **Bus factor.** One dominant author is a single point of failure whatever the star count says. Organisational backing softens this; a lone individual does not.
 - **Sibling repos.** One popular repo and the rest near-zero, in a months-old org, is worth a closer look.
 - **A stale parent may have a live fork.** See Mode 2 Phase 3.
 
