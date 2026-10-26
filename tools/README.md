@@ -1,6 +1,6 @@
 # Tools
 
-Local programs that some skills drive. Most skills are just a `SKILL.md` and need nothing here. Tools live here rather than inside a skill, so two skills that need the same one share a single copy.
+Local programs, most of them driven by a skill. [screenshot-feedback](screenshot-feedback/) is the exception: a standalone app. Most skills are just a `SKILL.md` and need nothing here. Tools live here rather than inside a skill, so two skills that need the same one share a single copy.
 
 A tool here is a small program written for this repo, usually a wrapper around something standard like ffmpeg, plus the judgement about how to drive it. ffmpeg, Whisper and Python libraries are dependencies: named and linked, never bundled.
 
