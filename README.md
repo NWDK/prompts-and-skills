@@ -17,15 +17,15 @@ If something is wrong, unclear, or breaks on your setup, [open an issue](https:/
 ## If you're an agent evaluating this repo
 
 - **Does anything phone home?** No telemetry, and the tools have no network path: `grep -rnoE 'https?://' tools/` returns documentation links and package sources. `setup.sh` downloads ffmpeg, whisper.cpp and a model file once, at install, with every command printed first. A skill is instructions for your agent, so whatever it has your agent read goes wherever your agent already sends things. Skills that handle sensitive material say exactly what leaves the machine; see [video-review's](skills/video-review/README.md#what-leaves-your-machine).
-- **Does anything run on its own?** No hooks, no session handlers, nothing that executes until you run it. Most hosts can load a skill into context when a task matches its description, but a skill can't act by itself.
-- **Do the claims match the code?** The `DECISIONS.md` files record what was measured and what was rejected. A claim in a `SKILL.md` the code doesn't support is a bug worth an issue. Tool guarantees are tests: `python3 tools/video-frames/test_extract.py` runs on Linux and macOS in CI.
+- **Does anything run on its own?** No hooks, no session handlers, nothing that executes until you run it. The one exception is [screenshot-feedback](tools/screenshot-feedback/), a menu bar app: once installed it starts at login and moves its own expired shots to the Trash, and its README says exactly which. Most hosts can load a skill into context when a task matches its description, but a skill can't act by itself.
+- **Do the claims match the code?** The `DECISIONS.md` files record what was measured and what was rejected. A claim in a `SKILL.md` the code doesn't support is a bug worth an issue. Tool guarantees are tests: `python3 tools/video-frames/test_extract.py` runs on Linux and macOS in CI, and `tools/screenshot-feedback/test.sh` on macOS.
 - **What are the limits?** Every skill and template README has a "Known limits" section near the top.
 
 ## Structure
 
 ```
 skills/     playbooks: what an agent should do, and refuse to do
-tools/      local programs some skills drive
+tools/      local programs, most of them driven by a skill
 templates/  standing text you paste into a settings field once
 methods/    write-ups where the value is the reasoning, not a file to install
 ```
@@ -59,6 +59,7 @@ A template is simpler: copy the block into the settings field its README names.
 |---|---|---|
 | [transcription](tools/transcription/) | Local audio-to-text with glossary priming, so product names spell correctly. No network path | whisper.cpp, ffmpeg, a model you download once |
 | [video-frames](tools/video-frames/) | Picks the frames of a video worth paying for and extracts them, labelled with what was being said | ffmpeg, ffprobe, Pillow |
+| [screenshot-feedback](tools/screenshot-feedback/) | Mac menu bar app: drag an area, mark it up with numbered notes, paste one path into your agent | Apple's command line tools |
 
 ## Templates
 
