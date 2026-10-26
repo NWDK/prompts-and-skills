@@ -1,0 +1,101 @@
+/* One neutral dark chrome, like a photo editor, so any screenshot reads clearly against it. */
+:root {
+  --bg: #1c1c1e;
+  --chrome: #2a2a2d;
+  --line: #3a3a3e;
+  --text: #f2f2f4;
+  --muted: #a1a1a8;
+  --accent: #ff3b30;      /* the mark colour: macOS system red */
+  --accent-ink: #ffffff;
+  --focus: #0a84ff;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  display: flex; flex-direction: column; overflow: hidden;
+  -webkit-user-select: none; user-select: none;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+kbd { font: 11px/1 -apple-system, system-ui, sans-serif; color: var(--muted); }
+
+.bar {
+  display: flex; align-items: center; gap: 12px; padding: 8px 12px;
+  background: var(--chrome); border-bottom: 1px solid var(--line); flex: none;
+}
+.group { display: flex; align-items: center; gap: 2px; }
+.tool {
+  display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 9px; flex: none; white-space: nowrap;
+  background: transparent; border: 0; border-radius: 6px;
+}
+/* Narrow windows drop the shortcut letters from the buttons; each button's tooltip still has its letter. */
+@media (max-width: 1180px) { .tool kbd { display: none; } .tool { padding: 0 8px; } }
+.tool svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: currentColor; }
+.tool svg path[fill="none"], .tool svg rect[fill="none"] { fill: none; }
+.tool:hover { background: #ffffff14; }
+.tool[aria-pressed="true"] { background: #ffffff24; }
+.tool[aria-pressed="true"] svg { color: var(--accent); }
+.seg { display: flex; margin-left: 4px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { background: transparent; border: 0; height: 26px; min-width: 30px; padding: 0 6px; color: var(--muted); }
+.seg button[aria-checked="true"] { background: #ffffff24; color: var(--text); }
+.seg[aria-disabled="true"] { opacity: .45; }
+.actions { gap: 8px; margin-left: auto; white-space: nowrap; }
+.plain { height: 30px; padding: 0 12px; background: transparent; border: 1px solid var(--line); border-radius: 6px; }
+.plain:hover { background: #ffffff14; }
+.primary { height: 30px; padding: 0 12px; background: var(--focus); border: 0; border-radius: 6px; color: #fff; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.primary kbd { color: #ffffffb8; }
+.danger { height: 30px; padding: 0 12px; background: var(--accent); border: 0; border-radius: 6px; color: #fff; font-weight: 600; }
+
+main { flex: 1; display: flex; min-height: 0; }
+.work { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+/* Under the shot rather than in the toolbar, where the tools left it no room. */
+.hint { flex: none; margin: 0; padding: 0 16px 10px; color: var(--muted); text-align: center; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; min-width: 0; overflow: hidden; }
+.frame { position: relative; line-height: 0; box-shadow: 0 0 0 1px #ffffff1f, 0 12px 40px #0008; }
+#shot { display: block; max-width: none; }
+#marks { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
+#marks.select { cursor: default; }
+#marks.over-mark { cursor: move; }
+#marks.over-handle { cursor: grab; }
+.text-input {
+  position: absolute; z-index: 2; min-width: 140px; line-height: normal;
+  font: 600 15px -apple-system, system-ui, sans-serif; color: var(--accent-ink);
+  background: var(--accent); border: 0; border-radius: 5px; padding: 4px 8px;
+  -webkit-user-select: text; user-select: text;
+}
+.text-input::placeholder { color: #ffffffb0; }
+
+.panel {
+  width: 300px; flex: none; display: flex; flex-direction: column; gap: 8px; padding: 14px;
+  background: var(--chrome); border-left: 1px solid var(--line); overflow-y: auto;
+}
+.label { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.row { display: flex; justify-content: space-between; margin-top: 8px; }
+textarea {
+  width: 100%; resize: vertical; color: var(--text); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 6px; padding: 8px; font: inherit;
+  -webkit-user-select: text; user-select: text;
+}
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.list li { display: grid; grid-template-columns: 22px 1fr 22px; gap: 4px 8px; align-items: center; padding: 6px; border-radius: 8px; }
+.list li.selected { background: #ffffff14; }
+.list .num { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 11px; display: grid; place-items: center; }
+.list .kind { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list .remove { width: 22px; height: 22px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); }
+.list .remove:hover { background: #ffffff14; color: var(--text); }
+.list textarea { grid-column: 2 / 4; padding: 5px 7px; resize: none; overflow: hidden; }
+.empty { margin: 0; color: var(--muted); }
+.source { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; word-break: break-word; -webkit-user-select: text; user-select: text; }
+
+.confirm {
+  position: fixed; left: 50%; top: 64px; transform: translateX(-50%); z-index: 5;
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: var(--chrome); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px #000a;
+}
+.confirm p { margin: 0 6px 0 0; }
+.confirm[hidden] { display: none; }
+dialog { background: var(--chrome); color: var(--text); border: 1px solid var(--line); border-radius: 10px; max-width: 80vw; }
+dialog pre { white-space: pre-wrap; font: 12px/1.5 ui-monospace, Menlo, monospace; -webkit-user-select: text; user-select: text; }

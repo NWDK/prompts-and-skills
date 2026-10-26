@@ -57,6 +57,11 @@ jobs:
       - name: Run the regression suite
         run: python3 -W error::ResourceWarning tools/video-frames/test_extract.py
 
+      # Builds the app into a scratch folder and checks the cleanup rule on planted files.
+      - name: Screenshot Feedback build and cleanup test (macOS)
+        if: runner.os == 'macOS'
+        run: bash tools/screenshot-feedback/test.sh
+
       # The install script is the thing a reader is most entitled to distrust,
       # so prove on every commit that its dry run stays a dry run.
       - name: Install script dry-run makes no changes

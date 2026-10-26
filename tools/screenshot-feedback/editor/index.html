@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mark up</title>
+<link rel="stylesheet" href="editor.css">
+</head>
+<body>
+<header class="bar">
+  <div class="group" role="toolbar" aria-label="Tools">
+    <button class="tool" data-tool="select" title="Select and move (V)"><svg viewBox="0 0 20 20"><path d="M5 3l10 7-4.5 1L13 16l-2 1-2.4-5L5 15z"/></svg><span>Select</span><kbd>V</kbd></button>
+    <button class="tool" data-tool="pin" title="Pin a note (P). Click to drop a number, then type the note"><svg viewBox="0 0 20 20"><path d="M10 17.5s-5.2-4.8-5.2-9a5.2 5.2 0 0110.4 0c0 4.2-5.2 9-5.2 9z" fill="none"/><circle cx="10" cy="8.5" r="1.7"/></svg><span>Pin</span><kbd>P</kbd></button>
+    <button class="tool" data-tool="arrow" title="Arrow (A). Drag the middle dot to curve it"><svg viewBox="0 0 20 20"><path d="M4 16L15 5M9 5h6v6" fill="none"/></svg><span>Arrow</span><kbd>A</kbd></button>
+    <button class="tool" data-tool="line" title="Line (L). Drag the middle dot to curve it"><svg viewBox="0 0 20 20"><path d="M4 16L16 4" fill="none"/></svg><span>Line</span><kbd>L</kbd></button>
+    <button class="tool" data-tool="box" title="Box (B). Swipe along a line of text to box that line"><svg viewBox="0 0 20 20"><rect x="3.5" y="5.5" width="13" height="9" rx="1.5" fill="none"/></svg><span>Box</span><kbd>B</kbd></button>
+    <button class="tool" data-tool="draw" title="Draw freehand (D)"><svg viewBox="0 0 20 20"><path d="M3 13.5c1.6-3.6 3.4-5.2 4.8-2.6s2.6 3.4 4.2.2 2.8-3.6 5-2.4" fill="none"/></svg><span>Draw</span><kbd>D</kbd></button>
+    <button class="tool" data-tool="text" title="Text (T)"><svg viewBox="0 0 20 20"><path d="M4 5h12M10 5v11" fill="none"/></svg><span>Text</span><kbd>T</kbd></button>
+  </div>
+  <div class="group" role="group" aria-label="Grid">
+    <button class="tool" id="grid" title="Alignment grid (G)" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 7h14M3 13h14M7 3v14M13 3v14" fill="none"/></svg><span>Grid</span><kbd>G</kbd></button>
+    <div class="seg" id="gridSize" role="radiogroup" aria-label="Grid spacing in screen points">
+      <button data-size="4" role="radio">4</button><button data-size="8" role="radio">8</button><button data-size="16" role="radio">16</button>
+    </div>
+  </div>
+  <div class="group actions">
+    <button class="plain" id="cancel" title="Close without saving (Esc)">Cancel</button>
+    <button class="primary" id="done" title="Save, copy the note's path and switch to your agent app (⌘↩)">Done, copy path <kbd>⌘↩</kbd></button>
+  </div>
+</header>
+<main>
+  <div class="work">
+    <section class="stage" id="stage">
+      <div class="frame" id="frame">
+        <img id="shot" alt="The captured screenshot">
+        <canvas id="marks"></canvas>
+        <input id="textInput" class="text-input" type="text" spellcheck="true" hidden>
+      </div>
+    </section>
+    <p class="hint" id="hint"></p>
+  </div>
+  <aside class="panel">
+    <label for="note" class="label">Note</label>
+    <textarea id="note" rows="4" placeholder="What should change? The agent reads this first."></textarea>
+    <div class="label row"><span>Marks</span><span class="count" id="count"></span></div>
+    <ol id="list" class="list"></ol>
+    <p class="empty" id="empty">Click the shot to pin a note, or draw an arrow, line, box or freehand mark. Each mark gets a number and its own note.</p>
+    <div class="source" id="source"></div>
+  </aside>
+</main>
+<div class="confirm" id="confirm" hidden>
+  <p>Close without saving these marks?</p>
+  <button class="plain" id="keep">Keep editing</button>
+  <button class="danger" id="discard">Discard</button>
+</div>
+<dialog id="devOut"><pre id="devText"></pre><button id="devClose">Close</button></dialog>
+<script src="editor.js"></script>
+</body>
+</html>
