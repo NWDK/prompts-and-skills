@@ -1,6 +1,7 @@
 #!/bin/bash
-# Builds into a scratch folder and checks the cleanup rule against planted files: which it would
-# move, and that it leaves everything else alone. Leaves the installed copy and real shots alone.
+# Builds into a scratch folder and checks two rules: which planted files cleanup would move (and that
+# it leaves everything else alone), and which capture sizes count as a stray click. Leaves the
+# installed copy and real shots alone.
 #   bash test.sh
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -29,4 +30,19 @@ fail=0
 [ "$got" = "$want" ] || { echo "FAIL cleanup picked:"; echo "$got"; echo "expected:"; echo "$want"; fail=1; }
 [ "$(cd "$F" && find . -type f | sort)" = "$planted" ] || { echo "FAIL the dry run changed the folder"; fail=1; }
 [ $fail = 0 ] && echo "ok: cleanup picks exactly the 3 expired shots and moves nothing on a dry run"
-exit $fail
+
+# The click rule: under 12 points both ways is a click. Points come from the PNG's DPI, as macOS saves it.
+echo iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg== | base64 -D > "$T/dot.png"
+cfail=0
+check() {   # width and height in pixels, dpi, expected
+  sips -z "$2" "$1" -s dpiWidth "$3" -s dpiHeight "$3" "$T/dot.png" --out "$T/box.png" >/dev/null 2>&1
+  got=$("$BIN" --is-click "$T/box.png")
+  [ "$got" = "$4" ] || { echo "FAIL $1 x $2 px at $3 dpi: $got, expected $4"; cfail=1; }
+}
+check 6 14 144 click      # a measured stray click: 3 x 7 points
+check 22 22 144 click     # 11 x 11 points
+check 24 24 144 shot      # 12 x 12 points
+check 600 14 144 shot     # a thin strip, 300 x 7 points
+check 20 20 72 shot       # 20 x 20 points on a non-Retina screen
+[ $cfail = 0 ] && echo "ok: a box under 12 points both ways counts as a click"
+exit $((fail | cfail))

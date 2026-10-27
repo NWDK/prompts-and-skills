@@ -104,6 +104,15 @@ func pixelSize(_ url: URL) -> (Int, Int)? {
   return (w, h)
 }
 
+// A click in the crosshair with no drag still saves a box a few points across, because the mouse
+// moves a hair during the click (one measured 3 x 7). Under 12 points both ways is a click, not a shot.
+func isClick(_ url: URL) -> Bool {
+  guard let (w, h) = pixelSize(url), let src = CGImageSourceCreateWithURL(url as CFURL, nil),
+        let props = CGImageSourceCopyPropertiesAtIndex(src, 0, nil) as? [CFString: Any] else { return false }
+  let scale = (props[kCGImagePropertyDPIWidth] as? Double ?? 72) / 72   // pixels per point
+  return Double(w) / scale < 12 && Double(h) / scale < 12
+}
+
 // Draws the marks layer (same pixel size, transparent) over the original capture, keeping its colour space.
 func composite(raw: URL, overlay: Data, out: URL) -> Bool {
   guard let bs = CGImageSourceCreateWithURL(raw as CFURL, nil), let base = CGImageSourceCreateImageAtIndex(bs, 0, nil),
@@ -397,6 +406,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     p.terminationHandler = { _ in
       DispatchQueue.main.async {
         self.busy = false
+        // A stray click just closes the crosshair, like ⌘⇧4: drop the tiny box it saved.
+        if FileManager.default.fileExists(atPath: url.path), isClick(url) { try? FileManager.default.removeItem(at: url) }
         done(FileManager.default.fileExists(atPath: url.path))
       }
     }
@@ -503,6 +514,11 @@ if CommandLine.arguments.count == 2, CommandLine.arguments[1] == "--login-status
 // Windowless check of the text reading: ScreenshotFeedback --text <image.png>
 if CommandLine.arguments.count == 3, CommandLine.arguments[1] == "--text" {
   shotText(URL(fileURLWithPath: CommandLine.arguments[2])).forEach { print($0) }; exit(0)
+}
+
+// Windowless check of the click rule: ScreenshotFeedback --is-click <image.png> prints click or shot.
+if CommandLine.arguments.count == 3, CommandLine.arguments[1] == "--is-click" {
+  print(isClick(URL(fileURLWithPath: CommandLine.arguments[2])) ? "click" : "shot"); exit(0)
 }
 
 // Windowless check of the cleanup rule: lists what it would move to the Trash, moves nothing.
