@@ -331,6 +331,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   var statusItem: NSStatusItem!
   var editors: [Editor] = []
   var capturing: Process?   // the crosshair, while it is on screen
+  var cancelled = false     // the shortcut was pressed again while it was up
   var lastQuickShot: URL?
   var lastQuickScreen: (name: String, scale: CGFloat) = ("", 2)
   var loginItem: NSMenuItem!
@@ -399,13 +400,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
   func capture(to url: URL, done: @escaping (Bool) -> Void) {
     guard capturing == nil else { return }
+    let existed = FileManager.default.fileExists(atPath: url.path)
     let p = Process()
     capturing = p
+    cancelled = false
     p.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
     p.arguments = ["-i", "-o", url.path]   // -i: drag an area, Space for a window, Esc cancels. -o: no window shadow.
     p.terminationHandler = { _ in
       DispatchQueue.main.async {
         self.capturing = nil
+        // A press just after the drag can land while the shot is being written: drop what this capture
+        // saved, so a cancel never keeps a shot or opens a window.
+        if self.cancelled {
+          if !existed { try? FileManager.default.removeItem(at: url) }
+          done(false); return
+        }
         // A stray click just closes the crosshair, like ⌘⇧4: drop the tiny box it saved.
         if FileManager.default.fileExists(atPath: url.path), isClick(url) { try? FileManager.default.removeItem(at: url) }
         done(FileManager.default.fileExists(atPath: url.path))
@@ -484,9 +493,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                         MemoryLayout<EventHotKeyID>.size, nil, &id)
       DispatchQueue.main.async {
         guard let app = NSApp.delegate as? AppDelegate else { return }
-        // Either hotkey again while the crosshair is up closes it, like Esc. Stopping screencapture
-        // mid-drag saves nothing.
-        if let p = app.capturing { if p.isRunning { p.terminate() }; return }
+        // Either hotkey again while the crosshair is up closes it, like Esc. SIGINT is the stop
+        // screencapture handles itself (it exits 0); SIGTERM would kill it outright.
+        if let p = app.capturing { if p.isRunning { app.cancelled = true; p.interrupt() }; return }
         if id.id == 1 { app.quickShot() } else if id.id == 2 { app.markupShot() }
       }
       return noErr
