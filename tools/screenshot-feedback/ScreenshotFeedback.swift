@@ -330,7 +330,7 @@ final class Editor: NSObject, WKScriptMessageHandler, WKNavigationDelegate, NSWi
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   var statusItem: NSStatusItem!
   var editors: [Editor] = []
-  var busy = false
+  var capturing: Process?   // the crosshair, while it is on screen
   var lastQuickShot: URL?
   var lastQuickScreen: (name: String, scale: CGFloat) = ("", 2)
   var loginItem: NSMenuItem!
@@ -398,20 +398,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   }
 
   func capture(to url: URL, done: @escaping (Bool) -> Void) {
-    guard !busy else { return }
-    busy = true
+    guard capturing == nil else { return }
     let p = Process()
+    capturing = p
     p.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
     p.arguments = ["-i", "-o", url.path]   // -i: drag an area, Space for a window, Esc cancels. -o: no window shadow.
     p.terminationHandler = { _ in
       DispatchQueue.main.async {
-        self.busy = false
+        self.capturing = nil
         // A stray click just closes the crosshair, like ⌘⇧4: drop the tiny box it saved.
         if FileManager.default.fileExists(atPath: url.path), isClick(url) { try? FileManager.default.removeItem(at: url) }
         done(FileManager.default.fileExists(atPath: url.path))
       }
     }
-    do { try p.run() } catch { busy = false; done(false) }
+    do { try p.run() } catch { capturing = nil; done(false) }
   }
 
   @objc func quickShot() {
@@ -484,6 +484,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                         MemoryLayout<EventHotKeyID>.size, nil, &id)
       DispatchQueue.main.async {
         guard let app = NSApp.delegate as? AppDelegate else { return }
+        // Either hotkey again while the crosshair is up closes it, like Esc. Stopping screencapture
+        // mid-drag saves nothing.
+        if let p = app.capturing { if p.isRunning { p.terminate() }; return }
         if id.id == 1 { app.quickShot() } else if id.id == 2 { app.markupShot() }
       }
       return noErr

@@ -11,7 +11,7 @@ A macOS menu bar app for showing an AI agent what you mean. Drag an area, mark i
 
 | Keys | |
 |---|---|
-| ⌥⇧4 | Quick shot. Drag an area (Space for a window); a click without a drag cancels. Saves the PNG and copies its path. |
+| ⌥⇧4 | Quick shot. Drag an area (Space for a window); a click without a drag, or the shortcut again, cancels. Saves the PNG and copies its path. |
 | ⌥⇧5 | Mark-up shot. Same capture, then the marking window. **Done** saves the marked PNG and a `.md` note, copies the note's path and switches to Claude (or ChatGPT, or stays put: set in the menu). |
 
 Marking window: Pin `P`, Arrow `A`, Line `L`, Box `B`, Draw `D`, Text `T`, Select `V`, grid `G`. Each mark gets a number and its own note. ⌘Z undoes, ⌘↩ is Done. The menu can also mark up the last quick shot.
