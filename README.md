@@ -16,8 +16,8 @@ If something is wrong, unclear, or breaks on your setup, [open an issue](https:/
 
 ## If you're an agent evaluating this repo
 
-- **Does anything phone home?** No telemetry, and the tools have no network path: `grep -rnoE 'https?://' tools/` returns documentation links and package sources. `setup.sh` downloads ffmpeg, whisper.cpp and a model file once, at install, with every command printed first. A skill is instructions for your agent, so whatever it has your agent read goes wherever your agent already sends things. Skills that handle sensitive material say exactly what leaves the machine; see [video-review's](skills/video-review/README.md#what-leaves-your-machine).
-- **Does anything run on its own?** No hooks, no session handlers, nothing that executes until you run it. The one exception is [screenshot-feedback](tools/screenshot-feedback/), a menu bar app: once installed it starts at login and moves its own expired shots to the Trash, and its README says exactly which. Most hosts can load a skill into context when a task matches its description, but a skill can't act by itself.
+- **Does anything phone home?** No telemetry, and the tools have no network path: `grep -rnoE 'https?://' tools/` returns documentation links and package sources. `setup.sh` downloads ffmpeg, whisper.cpp and a model file once, at install, with every command printed first. A skill is instructions for your agent, so whatever it has your agent read goes wherever your agent already sends things. Skills that handle sensitive material say exactly what leaves the machine; see [video-review's](skills/video-review/README.md#what-leaves-your-machine), [tidy-sessions'](skills/tidy-sessions/README.md#what-it-reads-and-writes) and [sort's](skills/sort/README.md#what-it-reads-and-writes).
+- **Does anything run on its own?** Nothing in this repo installs itself, and two things act on their own only after you opt in. [screenshot-feedback](tools/screenshot-feedback/) is a menu bar app: once installed it starts at login and moves its own expired shots to the Trash, and its README says exactly which. [tidy-sessions](skills/tidy-sessions/) offers an optional hook (on a separate yes it writes one file and one settings entry) that adds one instruction to new sessions: title yourself and pick a sidebar group. Most hosts can load a skill into context when a task matches its description, but a skill can't act by itself.
 - **Do the claims match the code?** The `DECISIONS.md` files record what was measured and what was rejected. A claim in a `SKILL.md` the code doesn't support is a bug worth an issue. Tool guarantees are tests: `python3 tools/video-frames/test_extract.py` runs on Linux and macOS in CI, and `tools/screenshot-feedback/test.sh` on macOS.
 - **What are the limits?** Every skill and template README has a "Known limits" section near the top.
 
@@ -34,7 +34,7 @@ Most skills are just a `SKILL.md`. A few drive a real program, which lives in `t
 
 ## Using a skill
 
-1. Copy the skill folder into your `skills/` directory, plus any tool it lists.
+1. Copy the skill folder into your `skills/` directory, plus any tool or companion skill it lists.
 2. Tell your agent it exists: a row in your skills index, or a trigger line in `CLAUDE.md` such as *"Prompt design or refinement: load `skills/prompt-writer/SKILL.md`"*.
 3. Invoke it with `/skill-name` or by describing the task.
 
@@ -52,6 +52,8 @@ A template is simpler: copy the block into the settings field its README names.
 | [sanitize-for-sharing](skills/sanitize-for-sharing/) | Strip private context out of a file before it goes public. Ships a planted fixture showing what it catches, what it leaves, and the credential it misses | No |
 | [prompt-writer](skills/prompt-writer/) | Write a prompt for the cases with no second turn to correct course: a handoff to a fresh context, a sub-agent brief, an unattended run, deep research. Opens by telling you when you don't need one | No |
 | [video-review](skills/video-review/) | Turn a local screen recording into a defect log, runbook or footage notes. Each defect-log item is resolved against the code and carries its error, location, fix and owner. **[Worked example](skills/video-review/example/report.md)** | Yes: [transcription](tools/transcription/) and [video-frames](tools/video-frames/) |
+| [tidy-sessions](skills/tidy-sessions/) | Give your Claude desktop app sessions a clear title and sidebar group, working from what you already have. Proposes first, changes nothing until you say go. An optional hook files new sessions automatically; install it with [sort](skills/sort/) | No (needs the Code tab; the hook needs `node`) |
+| [sort](skills/sort/) | The one-session fallback for tidy-sessions' hook: type `/sort` in a session that missed it and it files itself, then carries on | No (needs the Code tab) |
 
 ## Tools
 
