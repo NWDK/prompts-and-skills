@@ -12,6 +12,7 @@ Answers two questions: *should I use this thing someone sent me* (Mode 1), and *
 - Obfuscation (Phase 3 Q7) is a partial check: a source read is the wrong instrument for a payload that is not in a readable language.
 - Assumes `gh` is authenticated. Nothing here works against GitLab, Codeberg or a private forge without rewriting the commands.
 - The register is yours to read as well as write. If you never read it, Step 0 does nothing.
+- The Phase 6 re-check is a convention, not a job: nothing runs it on a schedule. It fires only when someone uses a file and reads its upstream line.
 
 ## Compatibility
 

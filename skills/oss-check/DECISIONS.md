@@ -32,6 +32,10 @@ Adapted from a method by **[@Ben-Eulogize](https://github.com/Ben-Eulogize)**, u
 
 **The "young project encodes a disagreement" heuristic is conditional, and checkable.** A newer project beside an established one usually encodes an opinion about what the incumbent got wrong, but only if the author did their homework. Testable rather than assumed: does the project say what it diverges from ("unlike X, this does Y")? One naming no alternative may have built in ignorance of it.
 
+**Age and authorship count only for software you will rely on.** Age and author count kept turning up as the stated reason to hold back a skills pack. For knowledge you take once (skills, processes, markdown), that is noise: you read every line, and the risk is in what you read, not who wrote it. Agent tooling moves fast, and much of the best work in it is solo. Age and bus factor stay as risk inputs only for software you run and need someone to keep maintaining, where they change how you take it (pin, copy, fallback), never whether. Rejected: keeping them as a soft signal everywhere, because in practice a soft signal became the stated reason.
+
+**Anything you took gets re-checked upstream, monthly for patterns.** Dependencies already had a reader (update tooling, a watch list). A landed pattern had none: once it was in your own file, nobody looked at the source again, and the source kept improving. Fix: an upstream line in the file itself, carrying the source, the commit taken and the last-checked date, re-checked when the file is used and the date is over a month old. Monthly because skills and agent tooling change in weeks. The trigger sits in the file because use is when staleness matters. Rejected for now: a scheduled job over register rows, more machinery than a one-line convention needs until the line is found long out of date.
+
 ## Rejected
 
 - **A numeric score.** Scores let you avoid deciding. Five words force a decision.

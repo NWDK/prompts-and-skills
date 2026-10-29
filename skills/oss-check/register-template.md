@@ -17,7 +17,7 @@ If a SKIP's revisit trigger has fired, re-vet and update the row.
 | **PARK** | Yes. Needs a real area *and* a real revisit trigger, or it's a SKIP. |
 | **SKIP**, source-read required to find the problem | Yes. |
 | **SKIP**, obvious from the repo page | No. Cheap to re-reject. |
-| **STEAL-THE-PATTERN** | Only if worth finding again. Mark the state in the Verdict cell: `[STEAL-STATE: LANDED]`, `HELD YYYY-MM-DD`, or `DROPPED`. |
+| **STEAL-THE-PATTERN** | Only if worth finding again. Mark the state in the Verdict cell: `[STEAL-STATE: LANDED]`, `HELD YYYY-MM-DD`, or `DROPPED`. For anything LANDED or HELD, add `last checked YYYY-MM-DD` to match the upstream line in the file you built (Phase 6). |
 
 Keep rows to one sentence. If a vet stopped early, say which phases did not run, in the row itself.
 
